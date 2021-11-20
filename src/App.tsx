@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import seedrandom from 'seedrandom';
 import Canvas from './Canvas';
+import World from './World';
 
 const seed = (1594013991704 || Date.now()).toString();
 console.log('seed:', seed);
 seedrandom(seed, { global: true });
+
+const world = new World(20, 2, seedrandom(seed));
 
 function App() {
   const canvasSize = 600;
@@ -12,7 +15,7 @@ function App() {
   const [frame, setFrame] = useState(0);
 
   const onDraw = (ctx: CanvasRenderingContext2D) => {
-    ctx.fillRect(10, 10, canvasSize - 20, canvasSize - 20);
+    world.draw(ctx);
   };
 
   return (
