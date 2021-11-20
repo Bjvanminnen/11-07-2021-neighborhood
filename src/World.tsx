@@ -1,7 +1,14 @@
 type Point = [number, number];
 type Vector = [number, number];
 
+const radToDec = (radians: number) => (radians * 360) / (2 * Math.PI);
+
+const normalizedAngle = (radians: number) =>
+  radians < 0 ? radians + 2 * Math.PI : radians;
+
 interface PointVector {
+  id?: string;
+  iter?: number;
   point: Point;
   vector: Vector;
 }
@@ -11,12 +18,14 @@ export default class World {
   constructor(width: number, height: number) {
     this.agents = [
       {
-        point: [125, 125],
-        vector: [5, -3],
+        id: 'a',
+        point: [100, 100],
+        vector: [2, 1],
       },
       {
-        point: [100, 100],
-        vector: [1, 1],
+        id: 'b',
+        point: [125, 105],
+        vector: [5, 5],
       },
     ];
   }
@@ -37,7 +46,17 @@ export default class World {
       current.point[1] + current.vector[1] - anchor[1],
       current.point[0] + current.vector[0] - anchor[0],
     );
-    const sign = vectorAngle > angle ? 1 : -1;
+
+    const da = normalizedAngle(vectorAngle) - normalizedAngle(angle);
+    const sign = da > 0 || da < -Math.PI ? 1 : -1;
+
+    // if (current.id === 'b') {
+    //   console.log(
+    //     sign,
+    //     radToDec(normalizedAngle(vectorAngle)),
+    //     radToDec(normalizedAngle(angle)),
+    //   );
+    // }
 
     const nextAngle = angle + radians * sign;
 
@@ -52,6 +71,8 @@ export default class World {
     ];
 
     return {
+      id: current.id,
+      iter: current.iter ?? 0 + 1,
       point: nextPoint,
       vector: nextVector,
     };
@@ -94,6 +115,7 @@ export default class World {
       ctx.stroke();
     };
 
+    ctx.strokeStyle = 'gray';
     agents.forEach(agent => drawPointVector(agent));
   }
 }

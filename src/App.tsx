@@ -10,6 +10,9 @@ seedrandom(seed, { global: true });
 const width = 600;
 const height = 600;
 const world = new World(width, height);
+// for (let i = 0; i < 20; i++) {
+//   world.update();
+// }
 
 function App() {
   const canvasSize = 600;
