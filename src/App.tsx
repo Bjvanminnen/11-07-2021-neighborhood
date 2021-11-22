@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import seedrandom from 'seedrandom';
 import Canvas from './Canvas';
 import World from './World';
+import useInterval from './useInterval';
+
+// TODO: account for torroidal nature
 
 const seed = (1594013991704 || Date.now()).toString();
 console.log('seed:', seed);
@@ -10,16 +13,22 @@ seedrandom(seed, { global: true });
 const width = 600;
 const height = 600;
 const world = new World(width, height);
-// for (let i = 0; i < 20; i++) {
-//   world.update();
-// }
 
 function App() {
   const canvasSize = 600;
 
   const [frame, setFrame] = useState(0);
 
+  useInterval(
+    () => {
+      world.update();
+      setFrame(x => x + 1);
+    },
+    frame < 14 ? 20 : null,
+  );
+
   const onDraw = (ctx: CanvasRenderingContext2D) => {
+    // console.log(`draw ${frame}`);
     if (frame === 0) {
       ctx.clearRect(0, 0, width, height);
     }

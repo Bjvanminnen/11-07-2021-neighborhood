@@ -1,7 +1,7 @@
 type Point = [number, number];
 type Vector = [number, number];
 
-const radToDec = (radians: number) => (radians * 360) / (2 * Math.PI);
+const radToDeg = (radians: number) => (radians * 360) / (2 * Math.PI);
 
 const normalizedAngle = (radians: number) =>
   radians < 0 ? radians + 2 * Math.PI : radians;
@@ -16,21 +16,23 @@ interface PointVector {
 export default class World {
   agents: PointVector[];
   constructor(width: number, height: number) {
+    const offset = 100;
     this.agents = [
       {
         id: 'a',
-        point: [100, 100],
+        point: [100 + offset, 100 + offset],
         vector: [2, 1],
       },
       {
         id: 'b',
-        point: [125, 105],
+        point: [125 + offset, 105 + offset],
         vector: [5, 5],
       },
     ];
   }
 
   private updateSingle(current: PointVector, anchor: Point): PointVector {
+    // the x and y of the line from anchor to point
     const dx = current.point[0] - anchor[0];
     const dy = current.point[1] - anchor[1];
     const radius = Math.sqrt(dx ** 2 + dy ** 2);
@@ -40,6 +42,9 @@ export default class World {
     );
 
     const radians = magnitude / radius;
+
+    // the angle of the line from anchor to point, where a line straight
+    // to the right is 0 and we increase CCW
     const angle = Math.atan2(dy, dx);
 
     const vectorAngle = Math.atan2(
@@ -47,16 +52,32 @@ export default class World {
       current.point[0] + current.vector[0] - anchor[0],
     );
 
-    const da = normalizedAngle(vectorAngle) - normalizedAngle(angle);
-    const sign = da > 0 || da < -Math.PI ? 1 : -1;
+    let sign = -1;
+    const normAngle = normalizedAngle(angle);
+    const normVector = normalizedAngle(vectorAngle);
+    if (
+      normVector >= normAngle &&
+      normVector < normalizedAngle(normAngle + Math.PI)
+    ) {
+      sign = 1;
+    }
 
-    // if (current.id === 'b') {
-    //   console.log(
-    //     sign,
-    //     radToDec(normalizedAngle(vectorAngle)),
-    //     radToDec(normalizedAngle(angle)),
-    //   );
-    // }
+    if (current.id === 'a' && sign > 0) {
+      console.log(current.point);
+      console.log(anchor);
+      console.log(radToDeg(angle), radToDeg(vectorAngle));
+      // console.log(dx, dy);
+      // console.log(
+      //   current.point[0] + current.vector[0] - anchor[0],
+      //   current.point[1] + current.vector[1] - anchor[1],
+      // );
+      // console.log(angle, radToDeg(angle));
+      console.log(
+        sign,
+        radToDeg(normalizedAngle(angle)),
+        radToDeg(normalizedAngle(vectorAngle)),
+      );
+    }
 
     const nextAngle = angle + radians * sign;
 
@@ -105,6 +126,7 @@ export default class World {
     };
 
     const drawPointVector = (pv: PointVector) => {
+      ctx.fillStyle = pv.id === 'a' ? 'red' : 'black';
       drawPoint(pv.point, CIRCLE_RADIUS);
       ctx.beginPath();
       ctx.moveTo(...pv.point);
