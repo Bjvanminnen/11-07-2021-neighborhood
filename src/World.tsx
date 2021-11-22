@@ -16,18 +16,23 @@ interface PointVector {
 export default class World {
   agents: PointVector[];
   constructor(width: number, height: number) {
-    const offset = 100;
     this.agents = [
       {
         id: 'a',
-        point: [100 + offset, 100 + offset],
-        vector: [2, 1],
+        point: [width / 2, height / 2],
+        vector: [5, 0],
       },
       {
         id: 'b',
-        point: [125 + offset, 105 + offset],
+        point: [width / 2 + 50, height / 2],
         vector: [5, 5],
       },
+
+      // {
+      //   id: 'c',
+      //   point: [225 + offset, 105 + offset],
+      //   vector: [3, 1],
+      // },
     ];
   }
 
@@ -44,7 +49,7 @@ export default class World {
     const radians = magnitude / radius;
 
     // the angle of the line from anchor to point, where a line straight
-    // to the right is 0 and we increase CCW
+    // to the right is 0 and we increase CW
     const angle = Math.atan2(dy, dx);
 
     const vectorAngle = Math.atan2(
@@ -52,31 +57,29 @@ export default class World {
       current.point[0] + current.vector[0] - anchor[0],
     );
 
-    let sign = -1;
-    const normAngle = normalizedAngle(angle);
-    const normVector = normalizedAngle(vectorAngle);
-    if (
-      normVector >= normAngle &&
-      normVector < normalizedAngle(normAngle + Math.PI)
-    ) {
-      sign = 1;
+    let normAngle = normalizedAngle(angle);
+    let normVector = normalizedAngle(vectorAngle);
+    if (normAngle > Math.PI) {
+      normAngle -= Math.PI;
+      normVector = normalizedAngle(normVector - Math.PI);
     }
+    // 1 for clockwise, -1 for counter clockwise
+    const sign =
+      normVector >= normAngle && normVector < normAngle + Math.PI ? 1 : -1;
 
-    if (current.id === 'a' && sign > 0) {
-      console.log(current.point);
-      console.log(anchor);
-      console.log(radToDeg(angle), radToDeg(vectorAngle));
-      // console.log(dx, dy);
-      // console.log(
-      //   current.point[0] + current.vector[0] - anchor[0],
-      //   current.point[1] + current.vector[1] - anchor[1],
-      // );
-      // console.log(angle, radToDeg(angle));
+    if (current.id === 'a' && sign === -1) {
+      // console.log(sign);
+      // console.log(anchor);
+      // console.log(current.point);
+      // console.log(current.vector);
+      console.log(dx, dy);
       console.log(
-        sign,
-        radToDeg(normalizedAngle(angle)),
-        radToDeg(normalizedAngle(vectorAngle)),
+        current.point[0] + current.vector[0] - anchor[0],
+        current.point[1] + current.vector[1] - anchor[1],
       );
+      console.log(radToDeg(angle), radToDeg(vectorAngle));
+      console.log(radToDeg(normAngle), radToDeg(normVector));
+      console.log(current);
     }
 
     const nextAngle = angle + radians * sign;
@@ -93,7 +96,7 @@ export default class World {
 
     return {
       id: current.id,
-      iter: current.iter ?? 0 + 1,
+      iter: (current.iter ?? 0) + 1,
       point: nextPoint,
       vector: nextVector,
     };
@@ -106,7 +109,7 @@ export default class World {
     for (let i = 0; i < agents.length; i++) {
       const next = this.updateSingle(
         agents[i],
-        agents[(i + 1) % agents.length].point,
+        this.findNearest(agents, agents[i]).point,
       );
       output.push(next);
     }
@@ -114,10 +117,19 @@ export default class World {
     this.agents = output;
   }
 
+  private findNearest(
+    agents: PointVector[],
+    current: PointVector,
+  ): PointVector {
+    let nearest = agents[0] === current ? agents[1] : agents[0];
+
+    return nearest;
+  }
+
   draw(ctx: CanvasRenderingContext2D) {
     const { agents } = this;
     const CIRCLE_RADIUS = 1;
-    const VECTOR_MAG_MULT = 0;
+    const VECTOR_MAG_MULT = 5;
 
     const drawPoint = (point: Point, radius: number) => {
       ctx.beginPath();
@@ -128,13 +140,16 @@ export default class World {
     const drawPointVector = (pv: PointVector) => {
       ctx.fillStyle = pv.id === 'a' ? 'red' : 'black';
       drawPoint(pv.point, CIRCLE_RADIUS);
-      ctx.beginPath();
-      ctx.moveTo(...pv.point);
-      ctx.lineTo(
-        pv.point[0] + pv.vector[0] * VECTOR_MAG_MULT,
-        pv.point[1] + pv.vector[1] * VECTOR_MAG_MULT,
-      );
-      ctx.stroke();
+
+      if (pv.id === 'a' && pv.iter === 14) {
+        ctx.beginPath();
+        ctx.moveTo(...pv.point);
+        ctx.lineTo(
+          pv.point[0] + pv.vector[0] * VECTOR_MAG_MULT,
+          pv.point[1] + pv.vector[1] * VECTOR_MAG_MULT,
+        );
+        ctx.stroke();
+      }
     };
 
     ctx.strokeStyle = 'gray';

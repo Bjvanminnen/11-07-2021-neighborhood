@@ -24,7 +24,7 @@ function App() {
       world.update();
       setFrame(x => x + 1);
     },
-    frame < 14 ? 20 : null,
+    frame < 1500 ? 20 : null,
   );
 
   const onDraw = (ctx: CanvasRenderingContext2D) => {
