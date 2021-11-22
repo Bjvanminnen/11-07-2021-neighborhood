@@ -5,6 +5,7 @@ import World from './World';
 import useInterval from './useInterval';
 
 // TODO: account for torroidal nature
+// might actually want to no have it be torroidal
 
 const seed = (1594013991704 || Date.now()).toString();
 console.log('seed:', seed);
@@ -19,13 +20,10 @@ function App() {
 
   const [frame, setFrame] = useState(0);
 
-  useInterval(
-    () => {
-      world.update();
-      setFrame(x => x + 1);
-    },
-    frame < 1500 ? 20 : null,
-  );
+  useInterval(() => {
+    world.update();
+    setFrame(x => x + 1);
+  }, 20);
 
   const onDraw = (ctx: CanvasRenderingContext2D) => {
     // console.log(`draw ${frame}`);

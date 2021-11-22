@@ -11,6 +11,7 @@ interface PointVector {
   iter?: number;
   point: Point;
   vector: Vector;
+  color?: string;
 }
 
 export default class World {
@@ -21,18 +22,20 @@ export default class World {
         id: 'a',
         point: [width / 2, height / 2],
         vector: [5, 0],
+        color: 'red',
       },
       {
         id: 'b',
         point: [width / 2 + 50, height / 2],
         vector: [5, 5],
+        color: 'blue',
       },
 
-      // {
-      //   id: 'c',
-      //   point: [225 + offset, 105 + offset],
-      //   vector: [3, 1],
-      // },
+      {
+        id: 'c',
+        point: [225, 105],
+        vector: [3, 1],
+      },
     ];
   }
 
@@ -67,21 +70,6 @@ export default class World {
     const sign =
       normVector >= normAngle && normVector < normAngle + Math.PI ? 1 : -1;
 
-    if (current.id === 'a' && sign === -1) {
-      // console.log(sign);
-      // console.log(anchor);
-      // console.log(current.point);
-      // console.log(current.vector);
-      console.log(dx, dy);
-      console.log(
-        current.point[0] + current.vector[0] - anchor[0],
-        current.point[1] + current.vector[1] - anchor[1],
-      );
-      console.log(radToDeg(angle), radToDeg(vectorAngle));
-      console.log(radToDeg(normAngle), radToDeg(normVector));
-      console.log(current);
-    }
-
     const nextAngle = angle + radians * sign;
 
     const nextPoint: Point = [
@@ -95,7 +83,7 @@ export default class World {
     ];
 
     return {
-      id: current.id,
+      ...current,
       iter: (current.iter ?? 0) + 1,
       point: nextPoint,
       vector: nextVector,
@@ -129,7 +117,7 @@ export default class World {
   draw(ctx: CanvasRenderingContext2D) {
     const { agents } = this;
     const CIRCLE_RADIUS = 1;
-    const VECTOR_MAG_MULT = 5;
+    const VECTOR_MAG_MULT = 0;
 
     const drawPoint = (point: Point, radius: number) => {
       ctx.beginPath();
@@ -138,10 +126,10 @@ export default class World {
     };
 
     const drawPointVector = (pv: PointVector) => {
-      ctx.fillStyle = pv.id === 'a' ? 'red' : 'black';
+      ctx.fillStyle = pv.color ?? 'black';
       drawPoint(pv.point, CIRCLE_RADIUS);
 
-      if (pv.id === 'a' && pv.iter === 14) {
+      if (VECTOR_MAG_MULT) {
         ctx.beginPath();
         ctx.moveTo(...pv.point);
         ctx.lineTo(
