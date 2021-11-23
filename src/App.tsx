@@ -7,7 +7,7 @@ import useInterval from './useInterval';
 // TODO: account for torroidal nature
 // might actually want to no have it be torroidal
 
-const seed = (1594013991704 || Date.now()).toString();
+const seed = '1637647485846' ?? Date.now().toString();
 console.log('seed:', seed);
 seedrandom(seed, { global: true });
 

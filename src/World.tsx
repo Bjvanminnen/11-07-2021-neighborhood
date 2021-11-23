@@ -1,7 +1,12 @@
+const palettes = require('nice-color-palettes/1000');
+
 type Point = [number, number];
 type Vector = [number, number];
 
 const radToDeg = (radians: number) => (radians * 360) / (2 * Math.PI);
+
+const randRange = (min: number, max: number): number =>
+  Math.random() * (max - min) + min;
 
 const normalizedAngle = (radians: number) =>
   radians < 0 ? radians + 2 * Math.PI : radians;
@@ -17,26 +22,59 @@ interface PointVector {
 export default class World {
   agents: PointVector[];
   constructor(width: number, height: number) {
+    const palette = [
+      ...palettes[0],
+      ...palettes[1],
+      ...palettes[2],
+      ...palettes[3],
+    ];
+
+    const BUFF = 200;
+    const centerX = width / 2;
+    const centerY = height / 2;
+
     this.agents = [
       {
         id: 'a',
-        point: [width / 2, height / 2],
-        vector: [5, 0],
+        point: [centerX, centerY],
+        vector: [randRange(-5, 5), randRange(-5, 5)],
         color: 'red',
       },
       {
+        id: 'c',
+        point: [centerX - 20, centerY],
+        vector: [randRange(-5, 5), randRange(-5, 5)],
+        color: 'green',
+      },
+      {
         id: 'b',
-        point: [width / 2 + 50, height / 2],
-        vector: [5, 5],
+        point: [centerX + 100, centerY],
+        vector: [randRange(-5, 5), randRange(-5, 5)],
         color: 'blue',
       },
-
-      {
-        id: 'c',
-        point: [225, 105],
-        vector: [3, 1],
-      },
     ];
+    // for (let x = centerX - BUFF; x <= centerX + BUFF; x += 20) {
+    //   for (let y = centerY - BUFF; y <= centerY + BUFF; y += 20) {
+    //     this.agents.push({
+    //       id: [x, y].join(','),
+    //       point: [x, y],
+    //       vector: [randRange(-1, 1), randRange(-1, 1)],
+    //       color: palette[~~randRange(0, palette.length)],
+    //     });
+    //   }
+    // }
+    // for (let i = 0; i < 6; i++) {
+    //   const dx = randRange(-BUFF, BUFF);
+    //   const dy = randRange(-BUFF, BUFF);
+    //
+    //   this.agents.push({
+    //     id: i.toString(),
+    //     point: [centerX + dx, centerY + dy],
+    //     // vector: [randRange(-5, 5), randRange(-5, 5)],
+    //     vector: [-dx / 20, -dy / 20],
+    //     color: palette[i % palette.length],
+    //   });
+    // }
   }
 
   private updateSingle(current: PointVector, anchor: Point): PointVector {
