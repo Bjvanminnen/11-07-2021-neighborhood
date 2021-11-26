@@ -23,10 +23,10 @@ export default class World {
   agents: PointVector[];
   constructor(width: number, height: number) {
     const palette = [
-      ...palettes[0],
-      ...palettes[1],
-      ...palettes[2],
-      ...palettes[3],
+      // ...palettes[4],
+      // ...palettes[5],
+      ...palettes[6],
+      ...palettes[7],
     ];
 
     const BUFF = 300;

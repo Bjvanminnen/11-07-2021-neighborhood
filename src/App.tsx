@@ -9,7 +9,7 @@ import useInterval from './useInterval';
 
 // TODO: store all points, but then unroll at some moment
 
-const seed = '1637649470925' ?? Date.now().toString();
+const seed = '' ?? Date.now().toString();
 console.log('seed:', seed);
 seedrandom(seed, { global: true });
 
@@ -31,7 +31,7 @@ function App() {
     // console.log(`draw ${frame}`);
     if (frame === 0) {
       // ctx.clearRect(0, 0, width, height);
-      ctx.fillStyle = 'white';
+      ctx.fillStyle = 'black';
       ctx.fillRect(0, 0, width, height);
     }
 
