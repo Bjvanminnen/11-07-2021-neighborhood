@@ -29,40 +29,42 @@ export default class World {
       ...palettes[3],
     ];
 
-    const BUFF = 200;
+    const BUFF = 300;
     const centerX = width / 2;
     const centerY = height / 2;
 
-    this.agents = [
-      {
-        id: 'a',
-        point: [centerX, centerY],
-        vector: [randRange(-5, 5), randRange(-5, 5)],
-        color: 'red',
-      },
-      {
-        id: 'c',
-        point: [centerX - 20, centerY],
-        vector: [randRange(-5, 5), randRange(-5, 5)],
-        color: 'green',
-      },
-      {
-        id: 'b',
-        point: [centerX + 100, centerY],
-        vector: [randRange(-5, 5), randRange(-5, 5)],
-        color: 'blue',
-      },
-    ];
-    // for (let x = centerX - BUFF; x <= centerX + BUFF; x += 20) {
-    //   for (let y = centerY - BUFF; y <= centerY + BUFF; y += 20) {
-    //     this.agents.push({
-    //       id: [x, y].join(','),
-    //       point: [x, y],
-    //       vector: [randRange(-1, 1), randRange(-1, 1)],
-    //       color: palette[~~randRange(0, palette.length)],
-    //     });
-    //   }
-    // }
+    const mag = 2;
+    this.agents = [];
+    // this.agents = [
+    //   {
+    //     id: 'a',
+    //     point: [centerX, centerY],
+    //     vector: [randRange(-mag, mag), randRange(-mag, mag)],
+    //     color: 'red',
+    //   },
+    //   {
+    //     id: 'c',
+    //     point: [centerX - 20, centerY],
+    //     vector: [randRange(-mag, mag), randRange(-mag, mag)],
+    //     color: 'green',
+    //   },
+    //   {
+    //     id: 'b',
+    //     point: [centerX + 100, centerY],
+    //     vector: [randRange(-mag, mag), randRange(-mag, mag)],
+    //     color: 'blue',
+    //   },
+    // ];
+    for (let x = centerX - BUFF; x <= centerX + BUFF; x += 50) {
+      for (let y = centerY - BUFF; y <= centerY + BUFF; y += 50) {
+        this.agents.push({
+          id: [x, y].join(','),
+          point: [x, y],
+          vector: [randRange(-1, 1), randRange(-1, 1)],
+          color: palette[~~randRange(0, palette.length)],
+        });
+      }
+    }
     // for (let i = 0; i < 6; i++) {
     //   const dx = randRange(-BUFF, BUFF);
     //   const dy = randRange(-BUFF, BUFF);
@@ -149,6 +151,20 @@ export default class World {
   ): PointVector {
     let nearest = agents[0] === current ? agents[1] : agents[0];
 
+    let nearestDistSquared = Infinity;
+    agents.forEach(other => {
+      if (other === current) {
+        return;
+      }
+      const dx = other.point[0] - current.point[0];
+      const dy = other.point[1] - current.point[1];
+      const distSquared = dx ** 2 + dy ** 2;
+      if (distSquared < nearestDistSquared) {
+        nearestDistSquared = distSquared;
+        nearest = other;
+      }
+    });
+
     return nearest;
   }
 
@@ -158,13 +174,15 @@ export default class World {
     const VECTOR_MAG_MULT = 0;
 
     const drawPoint = (point: Point, radius: number) => {
-      ctx.beginPath();
-      ctx.arc(point[0], point[1], radius, 0, 2 * Math.PI);
-      ctx.fill();
+      // ctx.beginPath();
+      // ctx.arc(point[0], point[1], radius, 0, 2 * Math.PI);
+      // ctx.fill();
+      ctx.fillRect(point[0], point[1], 1, 1);
     };
 
     const drawPointVector = (pv: PointVector) => {
-      ctx.fillStyle = pv.color ?? 'black';
+      ctx.fillStyle = (pv.color ?? '#000000') + 'FF';
+      // ctx.fillStyle = '#00000044';
       drawPoint(pv.point, CIRCLE_RADIUS);
 
       if (VECTOR_MAG_MULT) {

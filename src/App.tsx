@@ -7,16 +7,18 @@ import useInterval from './useInterval';
 // TODO: account for torroidal nature
 // might actually want to no have it be torroidal
 
-const seed = '1637647485846' ?? Date.now().toString();
+// TODO: store all points, but then unroll at some moment
+
+const seed = '1637649470925' ?? Date.now().toString();
 console.log('seed:', seed);
 seedrandom(seed, { global: true });
 
-const width = 600;
-const height = 600;
+const width = 900;
+const height = 900;
 const world = new World(width, height);
 
 function App() {
-  const canvasSize = 600;
+  const canvasSize = Math.min(width, height);
 
   const [frame, setFrame] = useState(0);
 
@@ -28,7 +30,9 @@ function App() {
   const onDraw = (ctx: CanvasRenderingContext2D) => {
     // console.log(`draw ${frame}`);
     if (frame === 0) {
-      ctx.clearRect(0, 0, width, height);
+      // ctx.clearRect(0, 0, width, height);
+      ctx.fillStyle = 'white';
+      ctx.fillRect(0, 0, width, height);
     }
 
     world.draw(ctx);
