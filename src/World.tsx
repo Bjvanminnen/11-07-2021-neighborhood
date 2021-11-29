@@ -22,12 +22,21 @@ interface PointVector {
 export default class World {
   agents: PointVector[];
   constructor(width: number, height: number) {
+    // const palette = [
+    //   // ...palettes[4],
+    //   // ...palettes[5],
+    //   ...palettes[6],
+    //   ...palettes[7],
+    // ];
     const palette = [
-      // ...palettes[4],
-      // ...palettes[5],
-      ...palettes[6],
-      ...palettes[7],
-    ];
+      '613F75',
+      'c1ff9b',
+      '266dd3',
+      '00c2d1',
+      'f9e900',
+      'ff6542',
+      'ed33b9',
+    ].map(x => '#' + x);
 
     const BUFF = 300;
     const centerX = width / 2;
@@ -55,8 +64,8 @@ export default class World {
     //     color: 'blue',
     //   },
     // ];
-    for (let x = centerX - BUFF; x <= centerX + BUFF; x += 50) {
-      for (let y = centerY - BUFF; y <= centerY + BUFF; y += 50) {
+    for (let x = centerX - BUFF; x <= centerX + BUFF; x += 20) {
+      for (let y = centerY - BUFF; y <= centerY + BUFF; y += 20) {
         this.agents.push({
           id: [x, y].join(','),
           point: [x, y],

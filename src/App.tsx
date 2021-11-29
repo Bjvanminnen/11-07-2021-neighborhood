@@ -13,8 +13,8 @@ const seed = '' ?? Date.now().toString();
 console.log('seed:', seed);
 seedrandom(seed, { global: true });
 
-const width = 900;
-const height = 900;
+const width = 800;
+const height = 800;
 const world = new World(width, height);
 
 function App() {
@@ -32,6 +32,12 @@ function App() {
     if (frame === 0) {
       // ctx.clearRect(0, 0, width, height);
       ctx.fillStyle = 'black';
+      ctx.fillRect(0, 0, width, height);
+    }
+
+    if (frame > 0) {
+      // ctx.clearRect(0, 0, width, height);
+      ctx.fillStyle = '#00000005';
       ctx.fillRect(0, 0, width, height);
     }
 
