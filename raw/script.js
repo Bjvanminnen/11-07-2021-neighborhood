@@ -20,12 +20,12 @@ function initialize(width, height) {
     'ed33b9',
   ].map(x => '#' + x);
 
-  const BUFF = Math.min(width, height) * 0.3;
+  const BUFF = Math.min(width, height) * 0.25;
   const centerX = width / 2;
   const centerY = height / 2;
 
   const agents = [];
-  const gap = 20;
+  const gap = 18;
 
   for (let x = centerX - BUFF; x <= centerX + BUFF; x += gap) {
     for (let y = centerY - BUFF; y <= centerY + BUFF; y += gap) {
@@ -48,7 +48,8 @@ function draw(ctx, agents) {
   };
 
   const drawPointVector = pv => {
-    ctx.fillStyle = pv.color;
+    // ctx.fillStyle = pv.color;
+    ctx.fillStyle = 'white';
     drawPoint(pv.point, CIRCLE_RADIUS);
   };
 
@@ -146,6 +147,8 @@ function main() {
 
   ctx.fillStyle = '#000000';
   ctx.fillRect(0, 0, width, height);
+
+  ctx.globalCompositeOperation = 'luminosity';
 
   setInterval(() => {
     agents = update(agents);
