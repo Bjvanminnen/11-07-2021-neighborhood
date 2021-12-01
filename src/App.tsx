@@ -28,6 +28,9 @@ function App() {
   }, 20);
 
   const onDraw = (ctx: CanvasRenderingContext2D) => {
+    // if (frame > 0) {
+    //   return;
+    // }
     // console.log(`draw ${frame}`);
     if (frame === 0) {
       // ctx.clearRect(0, 0, width, height);
@@ -35,11 +38,11 @@ function App() {
       ctx.fillRect(0, 0, width, height);
     }
 
-    if (frame > 0) {
-      // ctx.clearRect(0, 0, width, height);
-      ctx.fillStyle = '#00000005';
-      ctx.fillRect(0, 0, width, height);
-    }
+    // if (frame > 0) {
+    //   // ctx.clearRect(0, 0, width, height);
+    //   ctx.fillStyle = '#00000005';
+    //   ctx.fillRect(0, 0, width, height);
+    // }
 
     world.draw(ctx);
   };

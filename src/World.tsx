@@ -38,34 +38,15 @@ export default class World {
       'ed33b9',
     ].map(x => '#' + x);
 
-    const BUFF = 300;
+    const BUFF = Math.min(width, height) * 0.25;
+    const gap = 80;
+
     const centerX = width / 2;
     const centerY = height / 2;
 
-    const mag = 2;
     this.agents = [];
-    // this.agents = [
-    //   {
-    //     id: 'a',
-    //     point: [centerX, centerY],
-    //     vector: [randRange(-mag, mag), randRange(-mag, mag)],
-    //     color: 'red',
-    //   },
-    //   {
-    //     id: 'c',
-    //     point: [centerX - 20, centerY],
-    //     vector: [randRange(-mag, mag), randRange(-mag, mag)],
-    //     color: 'green',
-    //   },
-    //   {
-    //     id: 'b',
-    //     point: [centerX + 100, centerY],
-    //     vector: [randRange(-mag, mag), randRange(-mag, mag)],
-    //     color: 'blue',
-    //   },
-    // ];
-    for (let x = centerX - BUFF; x <= centerX + BUFF; x += 20) {
-      for (let y = centerY - BUFF; y <= centerY + BUFF; y += 20) {
+    for (let x = centerX - BUFF; x <= centerX + BUFF; x += gap) {
+      for (let y = centerY - BUFF; y <= centerY + BUFF; y += gap) {
         this.agents.push({
           id: [x, y].join(','),
           point: [x, y],
@@ -74,18 +55,6 @@ export default class World {
         });
       }
     }
-    // for (let i = 0; i < 6; i++) {
-    //   const dx = randRange(-BUFF, BUFF);
-    //   const dy = randRange(-BUFF, BUFF);
-    //
-    //   this.agents.push({
-    //     id: i.toString(),
-    //     point: [centerX + dx, centerY + dy],
-    //     // vector: [randRange(-5, 5), randRange(-5, 5)],
-    //     vector: [-dx / 20, -dy / 20],
-    //     color: palette[i % palette.length],
-    //   });
-    // }
   }
 
   private updateSingle(current: PointVector, anchor: Point): PointVector {
@@ -183,16 +152,39 @@ export default class World {
     const VECTOR_MAG_MULT = 0;
 
     const drawPoint = (point: Point, radius: number) => {
-      // ctx.beginPath();
-      // ctx.arc(point[0], point[1], radius, 0, 2 * Math.PI);
-      // ctx.fill();
       ctx.fillRect(point[0], point[1], 1, 1);
+    };
+
+    const drawTriangle = (pv: PointVector, radius: number) => {
+      const angle = Math.atan2(pv.vector[1], pv.vector[0]);
+      const da = 0.9;
+
+      ctx.beginPath();
+      ctx.moveTo(
+        pv.point[0] + Math.cos(angle + Math.PI * da) * radius,
+        pv.point[1] + Math.sin(angle + Math.PI * da) * radius,
+      );
+      ctx.lineTo(
+        pv.point[0] + Math.cos(angle) * radius,
+        pv.point[1] + Math.sin(angle) * radius,
+      );
+      ctx.lineTo(
+        pv.point[0] + Math.cos(angle - Math.PI * da) * radius,
+        pv.point[1] + Math.sin(angle - Math.PI * da) * radius,
+      );
+
+      ctx.stroke();
     };
 
     const drawPointVector = (pv: PointVector) => {
       ctx.fillStyle = (pv.color ?? '#000000') + 'FF';
+      ctx.strokeStyle = (pv.color ?? '#000000') + 'ff';
       // ctx.fillStyle = '#00000044';
-      drawPoint(pv.point, CIRCLE_RADIUS);
+      // drawPoint(pv.point, CIRCLE_RADIUS);
+      drawTriangle(pv, 5);
+
+      ctx.strokeStyle = 'black';
+      drawTriangle(pv, 4);
 
       if (VECTOR_MAG_MULT) {
         ctx.beginPath();
