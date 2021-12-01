@@ -152,12 +152,15 @@ export default class World {
     const VECTOR_MAG_MULT = 0;
 
     const drawPoint = (point: Point, radius: number) => {
-      ctx.fillRect(point[0], point[1], 1, 1);
+      // ctx.fillRect(point[0], point[1], 1, 1);
+      ctx.beginPath();
+      ctx.arc(point[0], point[1], radius, 0, 2 * Math.PI);
+      ctx.fill();
     };
 
     const drawTriangle = (pv: PointVector, radius: number) => {
       const angle = Math.atan2(pv.vector[1], pv.vector[0]);
-      const da = 0.9;
+      const da = 0.8;
 
       ctx.beginPath();
       ctx.moveTo(
@@ -176,15 +179,41 @@ export default class World {
       ctx.stroke();
     };
 
+    const drawDoublePoint = (pv: PointVector, radius: number) => {
+      const angle = Math.atan2(pv.vector[1], pv.vector[0]);
+      const da = 0.5;
+
+      drawPoint(
+        [
+          pv.point[0] + Math.cos(angle + Math.PI * da) * radius,
+          pv.point[1] + Math.sin(angle + Math.PI * da) * radius,
+        ],
+        1,
+      );
+      drawPoint(
+        [
+          pv.point[0] + Math.cos(angle - Math.PI * da) * radius,
+          pv.point[1] + Math.sin(angle - Math.PI * da) * radius,
+        ],
+        1,
+      );
+    };
+
     const drawPointVector = (pv: PointVector) => {
+      ctx.fillStyle = 'black';
+      drawDoublePoint(pv, 3);
       ctx.fillStyle = (pv.color ?? '#000000') + 'FF';
       ctx.strokeStyle = (pv.color ?? '#000000') + 'ff';
+      drawDoublePoint(pv, 2.5);
+
       // ctx.fillStyle = '#00000044';
       // drawPoint(pv.point, CIRCLE_RADIUS);
-      drawTriangle(pv, 5);
+      // drawTriangle(pv, 5);
 
-      ctx.strokeStyle = 'black';
-      drawTriangle(pv, 4);
+      // ctx.strokeStyle = 'black';
+      // drawTriangle(pv, 4);
+      // ctx.fillStyle = '#00000044';
+      // drawPoint(pv.point, 2);
 
       if (VECTOR_MAG_MULT) {
         ctx.beginPath();
