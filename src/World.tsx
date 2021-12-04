@@ -129,6 +129,8 @@ export default class World {
   update() {
     const { agents } = this;
 
+    // TODO: should shuffle
+
     const output: PointVector[] = [];
     for (let i = 0; i < agents.length; i++) {
       const next = this.updateSingle(
@@ -224,26 +226,17 @@ export default class World {
       // drawDoublePoint(pv, 2.5);
 
       // ctx.fillStyle = '#00000044';
+      const point: Point = [pv.point[0] + 70, pv.point[1] + 70];
       ctx.strokeStyle = this.background;
-      drawPoint(pv.point, 4.5);
+      drawPoint(point, 4.5);
       ctx.strokeStyle = (pv.color ?? '#000000') + 'ff';
-      drawPoint(pv.point, 3);
+      drawPoint(point, 3);
       // drawTriangle(pv, 5);
 
       // ctx.strokeStyle = 'black';
       // drawTriangle(pv, 4);
       // ctx.fillStyle = '#00000044';
       // drawPoint(pv.point, 2);
-
-      if (VECTOR_MAG_MULT) {
-        ctx.beginPath();
-        ctx.moveTo(...pv.point);
-        ctx.lineTo(
-          pv.point[0] + pv.vector[0] * VECTOR_MAG_MULT,
-          pv.point[1] + pv.vector[1] * VECTOR_MAG_MULT,
-        );
-        ctx.stroke();
-      }
     };
 
     ctx.strokeStyle = 'gray';
