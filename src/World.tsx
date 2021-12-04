@@ -1,12 +1,10 @@
+import seedrandom from 'seedrandom';
 const palettes = require('nice-color-palettes/1000');
 
 type Point = [number, number];
 type Vector = [number, number];
 
 const radToDeg = (radians: number) => (radians * 360) / (2 * Math.PI);
-
-const randRange = (min: number, max: number): number =>
-  Math.random() * (max - min) + min;
 
 const normalizedAngle = (radians: number) =>
   radians < 0 ? radians + 2 * Math.PI : radians;
@@ -20,23 +18,30 @@ interface PointVector {
 }
 
 export default class World {
+  private rng: () => number;
   agents: PointVector[];
-  constructor(width: number, height: number) {
+  public readonly background: string;
+  constructor(width: number, height: number, seed: string) {
+    const { randRange, sample } = this;
+
+    this.rng = seedrandom(seed);
+
+    // const paletteIndex = ~~randRange(0, palettes.length);
+    // console.log(paletteIndex);
+    const paletteIndex = 940;
+    let palette = [...palettes[paletteIndex]];
+
     // const palette = [
-    //   // ...palettes[4],
-    //   // ...palettes[5],
-    //   ...palettes[6],
-    //   ...palettes[7],
-    // ];
-    const palette = [
-      '613F75',
-      'c1ff9b',
-      '266dd3',
-      '00c2d1',
-      'f9e900',
-      'ff6542',
-      'ed33b9',
-    ].map(x => '#' + x);
+    //   '613F75',
+    //   'c1ff9b',
+    //   '266dd3',
+    //   '00c2d1',
+    //   'f9e900',
+    //   'ff6542',
+    //   'ed33b9',
+    // ].map(x => '#' + x);
+    this.background = palette[0];
+    palette = palette.slice(1);
 
     const BUFF = Math.min(width, height) * 0.25;
     const gap = 80;
@@ -44,18 +49,31 @@ export default class World {
     const centerX = width / 2;
     const centerY = height / 2;
 
+    const mag = 2;
     this.agents = [];
     for (let x = centerX - BUFF; x <= centerX + BUFF; x += gap) {
       for (let y = centerY - BUFF; y <= centerY + BUFF; y += gap) {
         this.agents.push({
           id: [x, y].join(','),
           point: [x, y],
-          vector: [randRange(-1, 1), randRange(-1, 1)],
-          color: palette[~~randRange(0, palette.length)],
+          vector: [randRange(-mag, mag), randRange(-mag, mag)],
+          color: sample(palette),
         });
       }
     }
   }
+
+  change() {
+    this.agents.forEach(agent => {
+      agent.vector[0] *= 2;
+      agent.vector[1] *= 2;
+    });
+  }
+
+  private randRange = (min: number, max: number): number =>
+    this.rng() * (max - min) + min;
+  private sample = <T extends unknown>(rg: T[]): T =>
+    rg[~~this.randRange(0, rg.length)];
 
   private updateSingle(current: PointVector, anchor: Point): PointVector {
     // the x and y of the line from anchor to point
@@ -148,14 +166,13 @@ export default class World {
 
   draw(ctx: CanvasRenderingContext2D) {
     const { agents } = this;
-    const CIRCLE_RADIUS = 1;
     const VECTOR_MAG_MULT = 0;
 
     const drawPoint = (point: Point, radius: number) => {
       // ctx.fillRect(point[0], point[1], 1, 1);
       ctx.beginPath();
       ctx.arc(point[0], point[1], radius, 0, 2 * Math.PI);
-      ctx.fill();
+      ctx.stroke();
     };
 
     const drawTriangle = (pv: PointVector, radius: number) => {
@@ -201,13 +218,16 @@ export default class World {
 
     const drawPointVector = (pv: PointVector) => {
       ctx.fillStyle = 'black';
-      drawDoublePoint(pv, 3);
-      ctx.fillStyle = (pv.color ?? '#000000') + 'FF';
-      ctx.strokeStyle = (pv.color ?? '#000000') + 'ff';
-      drawDoublePoint(pv, 2.5);
+      // drawDoublePoint(pv, 3);
+      ctx.fillStyle = (pv.color ?? '#000000') + 'ff';
+      ctx.strokeStyle = (pv.color ?? '#000000') + '66';
+      // drawDoublePoint(pv, 2.5);
 
       // ctx.fillStyle = '#00000044';
-      // drawPoint(pv.point, CIRCLE_RADIUS);
+      ctx.strokeStyle = this.background;
+      drawPoint(pv.point, 4.5);
+      ctx.strokeStyle = (pv.color ?? '#000000') + 'ff';
+      drawPoint(pv.point, 3);
       // drawTriangle(pv, 5);
 
       // ctx.strokeStyle = 'black';

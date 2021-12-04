@@ -9,13 +9,14 @@ import useInterval from './useInterval';
 
 // TODO: store all points, but then unroll at some moment
 
-const seed = '' ?? Date.now().toString();
+const seed = '1638659371800' || Date.now().toString();
 console.log('seed:', seed);
-seedrandom(seed, { global: true });
 
 const width = 800;
 const height = 800;
-const world = new World(width, height);
+const world = new World(width, height, seed);
+const world2 = new World(width, height, seed);
+world2.change();
 
 function App() {
   const canvasSize = Math.min(width, height);
@@ -24,6 +25,7 @@ function App() {
 
   useInterval(() => {
     world.update();
+    world2.update();
     setFrame(x => x + 1);
   }, 20);
 
@@ -34,7 +36,7 @@ function App() {
     // console.log(`draw ${frame}`);
     if (frame === 0) {
       // ctx.clearRect(0, 0, width, height);
-      ctx.fillStyle = 'black';
+      ctx.fillStyle = world.background ?? 'black';
       ctx.fillRect(0, 0, width, height);
     }
 
@@ -45,10 +47,12 @@ function App() {
     // }
 
     world.draw(ctx);
+    // world2.draw(ctx);
   };
 
   const handleClick = () => {
     world.update();
+    world2.update();
     setFrame(x => x + 1);
   };
 
