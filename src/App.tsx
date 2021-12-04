@@ -9,7 +9,7 @@ import useInterval from './useInterval';
 
 // TODO: store all points, but then unroll at some moment
 
-const seed = '1638659371800' || Date.now().toString();
+const seed = '' || Date.now().toString();
 console.log('seed:', seed);
 
 const width = 800;

@@ -43,8 +43,8 @@ export default class World {
     this.background = palette[0];
     palette = palette.slice(1);
 
-    const BUFF = Math.min(width, height) * 0.25;
-    const gap = 80;
+    const BUFF = Math.min(width, height) * 0.1;
+    const gap = 10;
 
     const centerX = width / 2;
     const centerY = height / 2;
@@ -155,7 +155,7 @@ export default class World {
       const dx = other.point[0] - current.point[0];
       const dy = other.point[1] - current.point[1];
       const distSquared = dx ** 2 + dy ** 2;
-      if (distSquared < nearestDistSquared) {
+      if (distSquared > nearestDistSquared) {
         nearestDistSquared = distSquared;
         nearest = other;
       }
