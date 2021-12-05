@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import seedrandom from 'seedrandom';
+// import seedrandom from 'seedrandom';
 import Canvas from './Canvas';
 import World from './World';
 import useInterval from './useInterval';
