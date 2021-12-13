@@ -7,9 +7,10 @@ import {
   Point,
   Vector,
 } from './utils';
-const palettes = require('nice-color-palettes/1000');
+import { drawAgent, drawPoint, drawTriangle } from './drawUtils';
+import { loadPalette } from './palettes';
 
-interface Agent {
+export interface Agent {
   id?: string;
   iter?: number;
   point: Point;
@@ -26,25 +27,13 @@ export default class World {
 
     this.rng = seedrandom(seed);
 
-    // const paletteIndex = ~~randRange(0, palettes.length);
-    // console.log(paletteIndex);
-    const paletteIndex = 940;
-    let palette = [...palettes[paletteIndex]];
+    let palette = loadPalette(940);
 
-    // const palette = [
-    //   '613F75',
-    //   'c1ff9b',
-    //   '266dd3',
-    //   '00c2d1',
-    //   'f9e900',
-    //   'ff6542',
-    //   'ed33b9',
-    // ].map(x => '#' + x);
     this.background = palette[0];
     palette = palette.slice(1);
 
-    const BUFF = Math.min(width, height) * 0.1;
-    const gap = 10;
+    const BUFF = Math.min(width, height) * 0.2;
+    const gap = 50;
 
     const centerX = width / 2;
     const centerY = height / 2;
@@ -165,78 +154,8 @@ export default class World {
 
   draw(ctx: CanvasRenderingContext2D) {
     const { agents } = this;
-    const VECTOR_MAG_MULT = 0;
-
-    const drawPoint = (point: Point, radius: number) => {
-      // ctx.fillRect(point[0], point[1], 1, 1);
-      ctx.beginPath();
-      ctx.arc(point[0], point[1], radius, 0, 2 * Math.PI);
-      ctx.stroke();
-    };
-
-    const drawTriangle = (pv: Agent, radius: number) => {
-      const angle = Math.atan2(pv.vector[1], pv.vector[0]);
-      const da = 0.8;
-
-      ctx.beginPath();
-      ctx.moveTo(
-        pv.point[0] + Math.cos(angle + Math.PI * da) * radius,
-        pv.point[1] + Math.sin(angle + Math.PI * da) * radius,
-      );
-      ctx.lineTo(
-        pv.point[0] + Math.cos(angle) * radius,
-        pv.point[1] + Math.sin(angle) * radius,
-      );
-      ctx.lineTo(
-        pv.point[0] + Math.cos(angle - Math.PI * da) * radius,
-        pv.point[1] + Math.sin(angle - Math.PI * da) * radius,
-      );
-
-      ctx.stroke();
-    };
-
-    const drawDoublePoint = (pv: Agent, radius: number) => {
-      const angle = Math.atan2(pv.vector[1], pv.vector[0]);
-      const da = 0.5;
-
-      drawPoint(
-        [
-          pv.point[0] + Math.cos(angle + Math.PI * da) * radius,
-          pv.point[1] + Math.sin(angle + Math.PI * da) * radius,
-        ],
-        1,
-      );
-      drawPoint(
-        [
-          pv.point[0] + Math.cos(angle - Math.PI * da) * radius,
-          pv.point[1] + Math.sin(angle - Math.PI * da) * radius,
-        ],
-        1,
-      );
-    };
-
-    const drawAgent = (pv: Agent) => {
-      ctx.fillStyle = 'black';
-      // drawDoublePoint(pv, 3);
-      ctx.fillStyle = (pv.color ?? '#000000') + 'ff';
-      ctx.strokeStyle = (pv.color ?? '#000000') + '66';
-      // drawDoublePoint(pv, 2.5);
-
-      // ctx.fillStyle = '#00000044';
-      const point: Point = [pv.point[0] + 70, pv.point[1] + 70];
-      ctx.strokeStyle = this.background;
-      drawPoint(point, 4.5);
-      ctx.strokeStyle = (pv.color ?? '#000000') + 'ff';
-      drawPoint(point, 3);
-      // drawTriangle(pv, 5);
-
-      // ctx.strokeStyle = 'black';
-      // drawTriangle(pv, 4);
-      // ctx.fillStyle = '#00000044';
-      // drawPoint(pv.point, 2);
-    };
 
     ctx.strokeStyle = 'gray';
-    agents.forEach(agent => drawAgent(agent));
+    agents.forEach(agent => drawPoint(ctx, agent.point, 1, agent.color + 'ff'));
   }
 }
