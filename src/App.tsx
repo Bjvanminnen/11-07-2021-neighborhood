@@ -9,6 +9,8 @@ import useInterval from './useInterval';
 
 // TODO: store all points, but then unroll at some moment
 
+// TODO: react n time steps after update
+
 const seed = '' || Date.now().toString();
 console.log('seed:', seed);
 

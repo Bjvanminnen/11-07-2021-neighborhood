@@ -9,7 +9,7 @@ const radToDeg = (radians: number) => (radians * 360) / (2 * Math.PI);
 const normalizedAngle = (radians: number) =>
   radians < 0 ? radians + 2 * Math.PI : radians;
 
-interface PointVector {
+interface Agent {
   id?: string;
   iter?: number;
   point: Point;
@@ -19,7 +19,7 @@ interface PointVector {
 
 export default class World {
   private rng: () => number;
-  agents: PointVector[];
+  agents: Agent[];
   public readonly background: string;
   constructor(width: number, height: number, seed: string) {
     const { randRange, sample } = this;
@@ -75,7 +75,7 @@ export default class World {
   private sample = <T extends unknown>(rg: T[]): T =>
     rg[~~this.randRange(0, rg.length)];
 
-  private updateSingle(current: PointVector, anchor: Point): PointVector {
+  private updateSingle(current: Agent, anchor: Point): Agent {
     // the x and y of the line from anchor to point
     const dx = current.point[0] - anchor[0];
     const dy = current.point[1] - anchor[1];
@@ -131,7 +131,7 @@ export default class World {
 
     // TODO: should shuffle
 
-    const output: PointVector[] = [];
+    const output: Agent[] = [];
     for (let i = 0; i < agents.length; i++) {
       const next = this.updateSingle(
         agents[i],
@@ -143,10 +143,7 @@ export default class World {
     this.agents = output;
   }
 
-  private findNearest(
-    agents: PointVector[],
-    current: PointVector,
-  ): PointVector {
+  private findNearest(agents: Agent[], current: Agent): Agent {
     let nearest = agents[0] === current ? agents[1] : agents[0];
 
     let nearestDistSquared = Infinity;
@@ -177,7 +174,7 @@ export default class World {
       ctx.stroke();
     };
 
-    const drawTriangle = (pv: PointVector, radius: number) => {
+    const drawTriangle = (pv: Agent, radius: number) => {
       const angle = Math.atan2(pv.vector[1], pv.vector[0]);
       const da = 0.8;
 
@@ -198,7 +195,7 @@ export default class World {
       ctx.stroke();
     };
 
-    const drawDoublePoint = (pv: PointVector, radius: number) => {
+    const drawDoublePoint = (pv: Agent, radius: number) => {
       const angle = Math.atan2(pv.vector[1], pv.vector[0]);
       const da = 0.5;
 
@@ -218,7 +215,7 @@ export default class World {
       );
     };
 
-    const drawPointVector = (pv: PointVector) => {
+    const drawAgent = (pv: Agent) => {
       ctx.fillStyle = 'black';
       // drawDoublePoint(pv, 3);
       ctx.fillStyle = (pv.color ?? '#000000') + 'ff';
@@ -240,6 +237,6 @@ export default class World {
     };
 
     ctx.strokeStyle = 'gray';
-    agents.forEach(agent => drawPointVector(agent));
+    agents.forEach(agent => drawAgent(agent));
   }
 }
