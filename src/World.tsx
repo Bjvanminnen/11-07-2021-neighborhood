@@ -154,7 +154,7 @@ export default class World {
       const dx = other.point[0] - current.point[0];
       const dy = other.point[1] - current.point[1];
       const distSquared = dx ** 2 + dy ** 2;
-      if (distSquared > nearestDistSquared) {
+      if (distSquared < nearestDistSquared) {
         nearestDistSquared = distSquared;
         nearest = other;
       }
