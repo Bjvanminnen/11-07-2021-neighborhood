@@ -1,13 +1,13 @@
 import seedrandom from 'seedrandom';
+
+import {
+  normalizedAngle,
+  randRange as utilRandRange,
+  sample as utilSample,
+  Point,
+  Vector,
+} from './utils';
 const palettes = require('nice-color-palettes/1000');
-
-type Point = [number, number];
-type Vector = [number, number];
-
-const radToDeg = (radians: number) => (radians * 360) / (2 * Math.PI);
-
-const normalizedAngle = (radians: number) =>
-  radians < 0 ? radians + 2 * Math.PI : radians;
 
 interface Agent {
   id?: string;
@@ -71,9 +71,9 @@ export default class World {
   }
 
   private randRange = (min: number, max: number): number =>
-    this.rng() * (max - min) + min;
-  private sample = <T extends unknown>(rg: T[]): T =>
-    rg[~~this.randRange(0, rg.length)];
+    utilRandRange(this.rng, min, max);
+
+  private sample = <T extends unknown>(rg: T[]): T => utilSample(this.rng, rg);
 
   private updateSingle(current: Agent, anchor: Point): Agent {
     // the x and y of the line from anchor to point
