@@ -35,10 +35,10 @@ export const drawPoint = (
   if (color) {
     ctx.strokeStyle = color;
   }
-  // ctx.fillRect(point[0], point[1], 1, 1);
-  ctx.beginPath();
-  ctx.arc(point[0], point[1], radius, 0, 2 * Math.PI);
-  ctx.stroke();
+  ctx.strokeRect(point[0], point[1], 1, 1);
+  // ctx.beginPath();
+  // ctx.arc(point[0], point[1], radius, 0, 2 * Math.PI);
+  // ctx.stroke();
 };
 
 export const drawDoublePoint = (

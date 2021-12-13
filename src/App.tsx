@@ -42,11 +42,10 @@ function App() {
       ctx.fillRect(0, 0, width, height);
     }
 
-    // if (frame > 0) {
-    //   // ctx.clearRect(0, 0, width, height);
-    //   ctx.fillStyle = '#00000005';
-    //   ctx.fillRect(0, 0, width, height);
-    // }
+    if (frame > 0) {
+      // ctx.fillStyle = world.background + '01';
+      // ctx.fillRect(0, 0, width, height);
+    }
 
     world.draw(ctx);
     // world2.draw(ctx);

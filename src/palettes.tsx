@@ -10,6 +10,10 @@ const custPalette = [
 ];
 palettes.push(custPalette);
 
-export function loadPalette(index: number) {
-  return palettes[index % palettes.length];
+export function loadPalette(...indices: number[]) {
+  const palette: string[] = [];
+  indices.forEach(i => {
+    palette.push(...palettes[i % palettes.length]);
+  });
+  return palette;
 }

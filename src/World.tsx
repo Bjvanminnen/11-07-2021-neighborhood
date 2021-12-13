@@ -6,6 +6,7 @@ import {
   sample as utilSample,
   Point,
   Vector,
+  lerpPoint,
 } from './utils';
 import { drawAgent, drawPoint, drawTriangle } from './drawUtils';
 import { loadPalette } from './palettes';
@@ -33,7 +34,7 @@ export default class World {
     palette = palette.slice(1);
 
     const BUFF = Math.min(width, height) * 0.2;
-    const gap = 50;
+    const gap = 40;
 
     const centerX = width / 2;
     const centerY = height / 2;
@@ -111,7 +112,7 @@ export default class World {
       ...current,
       iter: (current.iter ?? 0) + 1,
       point: nextPoint,
-      vector: nextVector,
+      vector: lerpPoint(current.vector, nextVector, 1),
     };
   }
 
