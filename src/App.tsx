@@ -10,6 +10,12 @@ import useInterval from './useInterval';
 // TODO: store all points, but then unroll at some moment
 
 // TODO: react n time steps after update
+// not sure how well that works with current approach. could try that
+// with attract-repel branch
+
+// TODO: build gifs?
+
+// TODO: rotate around a unit square defined by abs(x) + abs(y) = c
 
 const seed = '' || Date.now().toString();
 console.log('seed:', seed);
@@ -29,6 +35,9 @@ function App() {
     world.update();
     world2.update();
     setFrame(x => x + 1);
+    if (frame % 100 === 0) {
+      console.log(frame);
+    }
   }, 20);
 
   const onDraw = (ctx: CanvasRenderingContext2D) => {
