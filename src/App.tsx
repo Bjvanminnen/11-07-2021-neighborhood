@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 // import seedrandom from 'seedrandom';
 import Canvas from './Canvas';
 import World from './World';
+import Giffer from './Giffer';
 import useInterval from './useInterval';
 
 // TODO: account for torroidal nature
@@ -17,7 +18,7 @@ import useInterval from './useInterval';
 
 // TODO: rotate around a unit square defined by abs(x) + abs(y) = c
 
-const seed = '' || Date.now().toString();
+const seed = '123' || Date.now().toString();
 console.log('seed:', seed);
 
 const width = 800;
@@ -30,6 +31,7 @@ function App() {
   const canvasSize = Math.min(width, height);
 
   const [frame, setFrame] = useState(0);
+  const [giffer] = useState(() => new Giffer());
 
   useInterval(() => {
     world.update();
@@ -38,7 +40,7 @@ function App() {
     if (frame % 100 === 0) {
       console.log(frame);
     }
-  }, 20);
+  }, 100);
 
   const onDraw = (ctx: CanvasRenderingContext2D) => {
     // if (frame > 0) {
@@ -58,6 +60,11 @@ function App() {
 
     world.draw(ctx);
     // world2.draw(ctx);
+
+    giffer.addFrame(ctx);
+    if (frame === 500) {
+      giffer.finish(true);
+    }
   };
 
   const handleClick = () => {
