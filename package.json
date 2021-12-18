@@ -17,7 +17,8 @@
     "react-dom": "^17.0.1",
     "react-scripts": "3.4.4",
     "seedrandom": "^3.0.5",
-    "typescript": "~3.7.2"
+    "typescript": "~3.7.2",
+    "webm-writer": "^1.0.0"
   },
   "scripts": {
     "start": "react-scripts start",

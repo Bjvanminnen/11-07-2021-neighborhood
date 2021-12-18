@@ -34,7 +34,7 @@ export default class World {
     palette = palette.slice(1);
 
     const BUFF = Math.min(width, height) * 0.2;
-    const gap = 40;
+    const gap = 100;
 
     const centerX = width / 2;
     const centerY = height / 2;

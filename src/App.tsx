@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 // import seedrandom from 'seedrandom';
 import Canvas from './Canvas';
 import World from './World';
-import Giffer from './Giffer';
+import Giffer from './Webber';
 import useInterval from './useInterval';
 
 // TODO: account for torroidal nature
@@ -40,7 +40,7 @@ function App() {
     if (frame % 100 === 0) {
       console.log(frame);
     }
-  }, 100);
+  }, 20);
 
   const onDraw = (ctx: CanvasRenderingContext2D) => {
     // if (frame > 0) {
@@ -62,7 +62,7 @@ function App() {
     // world2.draw(ctx);
 
     giffer.addFrame(ctx);
-    if (frame === 500) {
+    if (frame === 1500) {
       giffer.finish(true);
     }
   };
