@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 // import seedrandom from 'seedrandom';
 import Canvas from './Canvas';
 import World from './World';
-import Giffer from './Webber';
+import Giffer from './Giffer';
 import useInterval from './useInterval';
 
 // TODO: account for torroidal nature
@@ -18,14 +18,12 @@ import useInterval from './useInterval';
 
 // TODO: rotate around a unit square defined by abs(x) + abs(y) = c
 
-const seed = '123' || Date.now().toString();
+const seed = '' || Date.now().toString();
 console.log('seed:', seed);
 
 const width = 800;
 const height = 800;
 const world = new World(width, height, seed);
-const world2 = new World(width, height, seed);
-world2.change();
 
 function App() {
   const canvasSize = Math.min(width, height);
@@ -35,7 +33,6 @@ function App() {
 
   useInterval(() => {
     world.update();
-    world2.update();
     setFrame(x => x + 1);
     if (frame % 100 === 0) {
       console.log(frame);
@@ -43,23 +40,12 @@ function App() {
   }, 20);
 
   const onDraw = (ctx: CanvasRenderingContext2D) => {
-    // if (frame > 0) {
-    //   return;
+    // if (frame === 0) {
+    //   ctx.fillStyle = world.background ?? 'black';
+    //   ctx.fillRect(0, 0, width, height);
     // }
-    // console.log(`draw ${frame}`);
-    if (frame === 0) {
-      // ctx.clearRect(0, 0, width, height);
-      ctx.fillStyle = world.background ?? 'black';
-      ctx.fillRect(0, 0, width, height);
-    }
 
-    if (frame > 0) {
-      // ctx.fillStyle = world.background + '01';
-      // ctx.fillRect(0, 0, width, height);
-    }
-
-    world.draw(ctx);
-    // world2.draw(ctx);
+    world.draw(ctx, '02');
 
     giffer.addFrame(ctx);
     if (frame === 1500) {
@@ -67,16 +53,36 @@ function App() {
     }
   };
 
+  const onDrawOverlay = (ctx: CanvasRenderingContext2D) => {
+    world.drawOverlay(ctx);
+  };
+
   const handleClick = () => {
     world.update();
-    world2.update();
     setFrame(x => x + 1);
   };
 
   return (
     <div style={{ margin: 10 }} onClick={handleClick}>
       <Canvas
-        style={{ background: '#fff', border: '1px solid black' }}
+        style={{
+          background: world.background,
+          border: '1px solid black',
+          position: 'absolute',
+          left: 18,
+        }}
+        width={canvasSize}
+        height={canvasSize}
+        onDraw={onDrawOverlay}
+        frame={frame}
+      />
+      <Canvas
+        style={{
+          background: 'transparent',
+          border: '1px solid black',
+          position: 'absolute',
+          left: 18,
+        }}
         width={canvasSize}
         height={canvasSize}
         onDraw={onDraw}

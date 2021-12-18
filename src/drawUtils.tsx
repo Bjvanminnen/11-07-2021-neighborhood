@@ -85,3 +85,16 @@ export const drawAgent = (
   ctx.strokeStyle = (pv.color ?? '#000000') + 'ff';
   drawPoint(ctx, point, 3);
 };
+
+export const drawCircle = (
+  ctx: CanvasRenderingContext2D,
+  center: Point,
+  outer: Point,
+) => {
+  const dx = outer[0] - center[0];
+  const dy = outer[1] - center[1];
+  const radius = Math.sqrt(dx ** 2 + dy ** 2);
+  ctx.beginPath();
+  ctx.arc(center[0], center[1], radius, 0, 2 * Math.PI);
+  ctx.stroke();
+};

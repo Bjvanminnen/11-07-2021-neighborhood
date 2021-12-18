@@ -7,8 +7,9 @@ import {
   Point,
   Vector,
   lerpPoint,
+  shuffle,
 } from './utils';
-import { drawAgent, drawPoint, drawTriangle } from './drawUtils';
+import { drawAgent, drawPoint, drawTriangle, drawCircle } from './drawUtils';
 import { loadPalette } from './palettes';
 
 export interface Agent {
@@ -22,13 +23,18 @@ export interface Agent {
 export default class World {
   private rng: () => number;
   agents: Agent[];
+  private iter = 0;
+
   public readonly background: string;
   constructor(width: number, height: number, seed: string) {
     const { randRange, sample } = this;
 
     this.rng = seedrandom(seed);
 
-    let palette = loadPalette(940);
+    //Interesting palettes: 229, 896, 699
+    const i = ~~randRange(0, 1000);
+    console.log('palette: ', i);
+    let palette = loadPalette(i);
 
     this.background = palette[0];
     palette = palette.slice(1);
@@ -39,7 +45,7 @@ export default class World {
     const centerX = width / 2;
     const centerY = height / 2;
 
-    const mag = 2;
+    const mag = 1;
     this.agents = [];
     for (let x = centerX - BUFF; x <= centerX + BUFF; x += gap) {
       for (let y = centerY - BUFF; y <= centerY + BUFF; y += gap) {
@@ -47,17 +53,31 @@ export default class World {
           id: [x, y].join(','),
           point: [x, y],
           vector: [randRange(-mag, mag), randRange(-mag, mag)],
+          // color: this.rng() < 0.2 ? this.background : sample(palette),
           color: sample(palette),
         });
       }
     }
-  }
-
-  change() {
-    this.agents.forEach(agent => {
-      agent.vector[0] *= 2;
-      agent.vector[1] *= 2;
-    });
+    this.agents = [
+      {
+        id: '1',
+        point: [width / 2, height / 2],
+        vector: [1, 1],
+        color: palette[1],
+      },
+      {
+        id: '2',
+        point: [width / 2 + 50, height / 2 + 2],
+        vector: [1, 1.5],
+        color: palette[2],
+      },
+      {
+        id: '3',
+        point: [width / 2 + 10, height / 2 - 20],
+        vector: [-1, 1.5],
+        color: palette[3],
+      },
+    ];
   }
 
   private randRange = (min: number, max: number): number =>
@@ -66,7 +86,7 @@ export default class World {
   private sample = <T extends unknown>(rg: T[]): T => utilSample(this.rng, rg);
 
   private updateSingle(current: Agent, anchor: Point): Agent {
-    // the x and y of the line from anchor to point
+    // the x and y of the line from point to anchor
     const dx = current.point[0] - anchor[0];
     const dy = current.point[1] - anchor[1];
     const radius = Math.sqrt(dx ** 2 + dy ** 2);
@@ -75,6 +95,7 @@ export default class World {
       current.vector[0] ** 2 + current.vector[1] ** 2,
     );
 
+    // how far around the circle to move
     const radians = magnitude / radius;
 
     // the angle of the line from anchor to point, where a line straight
@@ -103,6 +124,7 @@ export default class World {
       anchor[1] + Math.sin(nextAngle) * radius,
     ];
 
+    // next vector is just the tangent to the circle
     const nextVector: Point = [
       Math.cos(nextAngle + (Math.PI / 2) * sign) * magnitude,
       Math.sin(nextAngle + (Math.PI / 2) * sign) * magnitude,
@@ -117,15 +139,15 @@ export default class World {
   }
 
   update() {
-    const { agents } = this;
-
-    // TODO: should shuffle
+    this.iter++;
+    const rng = seedrandom(this.iter.toString());
+    const shuffled = shuffle(this.agents.slice(), rng);
 
     const output: Agent[] = [];
-    for (let i = 0; i < agents.length; i++) {
+    for (let i = 0; i < shuffled.length; i++) {
       const next = this.updateSingle(
-        agents[i],
-        this.findNearest(agents, agents[i]).point,
+        shuffled[i],
+        this.findNearest(shuffled, shuffled[i]).point,
       );
       output.push(next);
     }
@@ -153,10 +175,30 @@ export default class World {
     return nearest;
   }
 
-  draw(ctx: CanvasRenderingContext2D) {
+  draw(ctx: CanvasRenderingContext2D, alpha?: string) {
     const { agents } = this;
 
+    // if (alpha) {
+    //   ctx.globalCompositeOperation = 'luminosity';
+    //   const { width, height } = ctx.canvas;
+    //   ctx.fillStyle = this.background + alpha;
+    //   ctx.fillRect(0, 0, width, height);
+    // }
+
+    ctx.globalCompositeOperation = 'source-over';
     ctx.strokeStyle = 'gray';
     agents.forEach(agent => drawPoint(ctx, agent.point, 1, agent.color + 'ff'));
+  }
+
+  drawOverlay(ctx: CanvasRenderingContext2D) {
+    const rng = seedrandom((this.iter + 1).toString());
+    const shuffled = shuffle(this.agents.slice(), rng);
+
+    // ctx.clearRect(0, 0, width, height);
+    for (let i = 0; i < shuffled.length; i++) {
+      const neighbor = this.findNearest(shuffled, shuffled[i]);
+      ctx.strokeStyle = neighbor.color + '05';
+      drawCircle(ctx, shuffled[i].point, neighbor.point);
+    }
   }
 }

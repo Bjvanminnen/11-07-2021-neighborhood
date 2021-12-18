@@ -30,3 +30,23 @@ export const normalize = (v: Vector): Vector => {
   const mag = Math.sqrt(v[0] ** 2 + v[1] ** 2);
   return [v[0] / mag, v[1] / mag];
 };
+
+export function shuffle(array: any[], rng = Math.random) {
+  let currentIndex = array.length,
+    randomIndex;
+
+  // While there remain elements to shuffle...
+  while (currentIndex != 0) {
+    // Pick a remaining element...
+    randomIndex = Math.floor(rng() * currentIndex);
+    currentIndex--;
+
+    // And swap it with the current element.
+    [array[currentIndex], array[randomIndex]] = [
+      array[randomIndex],
+      array[currentIndex],
+    ];
+  }
+
+  return array;
+}
