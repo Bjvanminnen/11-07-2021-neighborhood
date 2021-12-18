@@ -20,19 +20,25 @@ export interface Agent {
   color?: string;
 }
 
+interface Options {
+  seed: string;
+  paletteIndex?: number;
+}
+
 export default class World {
   private rng: () => number;
   agents: Agent[];
   private iter = 0;
 
   public readonly background: string;
-  constructor(width: number, height: number, seed: string) {
+  constructor(width: number, height: number, options: Options) {
     const { randRange, sample } = this;
+    const { seed, paletteIndex } = options;
 
     this.rng = seedrandom(seed);
 
     //Interesting palettes: 229, 896, 699
-    const i = ~~randRange(0, 1000);
+    const i = paletteIndex ?? ~~randRange(0, 1000);
     console.log('palette: ', i);
     let palette = loadPalette(i);
 
