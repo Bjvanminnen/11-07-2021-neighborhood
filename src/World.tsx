@@ -20,27 +20,33 @@ export interface Agent {
   color?: string;
 }
 
-interface Options {
+export interface WorldOptions {
   seed: string;
   paletteIndex?: number;
+  vectorLerp?: number;
 }
 
 export default class World {
   private rng: () => number;
   agents: Agent[];
   private iter = 0;
+  private options: Required<WorldOptions>;
 
   public readonly background: string;
-  constructor(width: number, height: number, options: Options) {
+  constructor(width: number, height: number, options: WorldOptions) {
     const { randRange, sample } = this;
-    const { seed, paletteIndex } = options;
 
-    this.rng = seedrandom(seed);
+    this.rng = seedrandom(options.seed);
 
-    //Interesting palettes: 229, 896, 699
-    const i = paletteIndex ?? ~~randRange(0, 1000);
-    console.log('palette: ', i);
-    let palette = loadPalette(i);
+    this.options = {
+      paletteIndex: ~~randRange(0, 1000),
+      vectorLerp: 1,
+      ...options,
+    };
+
+    const { paletteIndex } = this.options;
+
+    let palette = loadPalette(paletteIndex);
 
     this.background = palette[0];
     palette = palette.slice(1);
@@ -68,19 +74,19 @@ export default class World {
       {
         id: '1',
         point: [width / 2, height / 2],
-        vector: [1, 1],
+        vector: [randRange(-mag, mag), randRange(-mag, mag)],
         color: palette[1],
       },
       {
         id: '2',
         point: [width / 2 + 50, height / 2 + 2],
-        vector: [1, 1.5],
+        vector: [randRange(-mag, mag), randRange(-mag, mag)],
         color: palette[2],
       },
       {
         id: '3',
         point: [width / 2 + 10, height / 2 - 20],
-        vector: [-1, 1.5],
+        vector: [randRange(-mag, mag), randRange(-mag, mag)],
         color: palette[3],
       },
     ];
@@ -140,7 +146,7 @@ export default class World {
       ...current,
       iter: (current.iter ?? 0) + 1,
       point: nextPoint,
-      vector: lerpPoint(current.vector, nextVector, 1),
+      vector: lerpPoint(current.vector, nextVector, this.options.vectorLerp),
     };
   }
 

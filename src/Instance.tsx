@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 // import seedrandom from 'seedrandom';
 import Canvas from './Canvas';
-import World from './World';
+import World, { WorldOptions } from './World';
 import Giffer from './Giffer';
 
 // TODO: account for torroidal nature
@@ -18,23 +18,21 @@ import Giffer from './Giffer';
 // TODO: rotate around a unit square defined by abs(x) + abs(y) = c
 
 function Instance({
-  seed,
   width,
   height,
   frame,
-  paletteIndex,
+  options,
+  flipped,
 }: {
-  seed: string;
   width: number;
   height: number;
   frame: number;
-  paletteIndex?: number;
+  options: WorldOptions;
+  flipped?: boolean;
 }) {
   const canvasSize = Math.min(width, height);
 
-  const [world] = useState(
-    () => new World(width, height, { seed, paletteIndex }),
-  );
+  const [world] = useState(() => new World(width, height, options));
   const [giffer] = useState(() => new Giffer());
 
   useEffect(() => {
@@ -59,32 +57,28 @@ function Instance({
     world.drawOverlay(ctx);
   };
 
+  const drawers = [onDrawOverlay, onDraw];
+  if (flipped) {
+    drawers.reverse();
+  }
+
   return (
     <div style={{ margin: 10, position: 'relative', width, height }}>
-      <Canvas
-        style={{
-          background: world.background,
-          border: '1px solid black',
-          position: 'absolute',
-          left: 0,
-        }}
-        width={canvasSize}
-        height={canvasSize}
-        onDraw={onDrawOverlay}
-        frame={frame}
-      />
-      <Canvas
-        style={{
-          background: 'transparent',
-          border: '1px solid black',
-          position: 'absolute',
-          left: 0,
-        }}
-        width={canvasSize}
-        height={canvasSize}
-        onDraw={onDraw}
-        frame={frame}
-      />
+      {drawers.map((drawer, i) => (
+        <Canvas
+          key={i}
+          style={{
+            background: i == 0 ? world.background : 'transparent',
+            border: '1px solid black',
+            position: 'absolute',
+            left: 0,
+          }}
+          width={canvasSize}
+          height={canvasSize}
+          onDraw={drawer}
+          frame={frame}
+        />
+      ))}
     </div>
   );
 }

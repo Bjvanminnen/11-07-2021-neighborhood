@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import useInterval from './useInterval';
 import Instance from './Instance';
 
-const seed = '' || Date.now().toString();
+const seed = '1639872519803' || Date.now().toString();
 console.log('seed:', seed);
 
 function App() {
@@ -17,13 +17,34 @@ function App() {
 
   return (
     <div style={{ display: 'flex' }}>
-      <Instance seed={seed} width={width} height={height} frame={frame} />
       <Instance
-        seed={seed}
         width={width}
         height={height}
         frame={frame}
-        paletteIndex={299}
+        options={{
+          seed: seed + '',
+          // paletteIndex: 299,
+        }}
+      />
+      <Instance
+        width={width}
+        height={height}
+        frame={frame}
+        options={{
+          seed: seed + '1',
+          // paletteIndex: 299,
+          vectorLerp: 1,
+        }}
+      />
+      <Instance
+        width={width}
+        height={height}
+        frame={frame}
+        options={{
+          seed: seed + '2',
+          // paletteIndex: 299,
+          vectorLerp: 1,
+        }}
       />
     </div>
   );
