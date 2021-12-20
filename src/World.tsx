@@ -45,6 +45,9 @@ export default class World {
     };
 
     const { paletteIndex } = this.options;
+    if (!options.paletteIndex) {
+      console.log('palette: ', paletteIndex);
+    }
 
     let palette = loadPalette(paletteIndex);
 
@@ -56,6 +59,11 @@ export default class World {
 
     const centerX = width / 2;
     const centerY = height / 2;
+
+    const jitter = (p: Point, amt = 1): Point => [
+      p[0] + randRange(-amt, amt),
+      p[1] + randRange(-amt, amt),
+    ];
 
     const mag = 1;
     this.agents = [];
@@ -70,26 +78,34 @@ export default class World {
         });
       }
     }
-    this.agents = [
-      {
-        id: '1',
-        point: [width / 2, height / 2],
+
+    this.agents = [];
+    const quadrants: Point[] = [
+      [width * 0.35, height * 0.3],
+      [width * 0.65, height * 0.3],
+      [(width * 2) / 4, height * 0.7],
+    ];
+
+    quadrants.forEach(quad => {
+      const jitterAmt = 40;
+      this.agents.push({
+        point: jitter(quad, jitterAmt),
         vector: [randRange(-mag, mag), randRange(-mag, mag)],
         color: palette[1],
-      },
-      {
-        id: '2',
-        point: [width / 2 + 50, height / 2 + 2],
+      });
+
+      this.agents.push({
+        point: jitter([quad[0] + 50, quad[1]], jitterAmt),
         vector: [randRange(-mag, mag), randRange(-mag, mag)],
         color: palette[2],
-      },
-      {
-        id: '3',
-        point: [width / 2 + 10, height / 2 - 20],
+      });
+
+      this.agents.push({
+        point: jitter([quad[0] + 10, quad[1] - 20], jitterAmt),
         vector: [randRange(-mag, mag), randRange(-mag, mag)],
         color: palette[3],
-      },
-    ];
+      });
+    });
   }
 
   private randRange = (min: number, max: number): number =>
@@ -199,7 +215,7 @@ export default class World {
 
     ctx.globalCompositeOperation = 'source-over';
     ctx.strokeStyle = 'gray';
-    agents.forEach(agent => drawPoint(ctx, agent.point, 1, agent.color + 'ff'));
+    agents.forEach(agent => drawPoint(ctx, agent.point, 1, agent.color + '88'));
   }
 
   drawOverlay(ctx: CanvasRenderingContext2D) {

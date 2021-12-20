@@ -2,12 +2,11 @@ import React, { useState } from 'react';
 import useInterval from './useInterval';
 import Instance from './Instance';
 
-const seed = '1639872519803' || Date.now().toString();
+const seed = '' || Date.now().toString();
 console.log('seed:', seed);
 
 function App() {
-  const width = 500;
-  const height = 500;
+  const size = 800;
 
   const [frame, setFrame] = useState(0);
 
@@ -18,15 +17,15 @@ function App() {
   return (
     <div style={{ display: 'flex' }}>
       <Instance
-        width={width}
-        height={height}
+        width={size}
+        height={size}
         frame={frame}
         options={{
           seed: seed + '',
-          // paletteIndex: 299,
+          paletteIndex: 137,
         }}
       />
-      <Instance
+      {/*<Instance
         width={width}
         height={height}
         frame={frame}
@@ -45,7 +44,7 @@ function App() {
           // paletteIndex: 299,
           vectorLerp: 1,
         }}
-      />
+      />*/}
     </div>
   );
 }
