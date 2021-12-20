@@ -98,3 +98,23 @@ export const drawCircle = (
   ctx.arc(center[0], center[1], radius, 0, 2 * Math.PI);
   ctx.stroke();
 };
+
+export const fillCircle = (
+  ctx: CanvasRenderingContext2D,
+  center: Point,
+  radius = 1,
+) => {
+  ctx.beginPath();
+  ctx.arc(center[0], center[1], radius, 0, 2 * Math.PI);
+  ctx.fill();
+};
+
+export const strokeCircle = (
+  ctx: CanvasRenderingContext2D,
+  center: Point,
+  radius = 1,
+) => {
+  ctx.beginPath();
+  ctx.arc(center[0], center[1], radius, 0, 2 * Math.PI);
+  ctx.stroke();
+};

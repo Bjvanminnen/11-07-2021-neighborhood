@@ -199,6 +199,18 @@ export default class World {
     };
   }
 
+  private updateSingleSquare(current: Agent, anchor: Point): Agent {
+    const dx = current.point[0] - anchor[0];
+    const dy = current.point[1] - anchor[1];
+
+    const radius = Math.abs(dx) + Math.abs(dy);
+
+    return {
+      ...current,
+      iter: (current.iter ?? 0) + 1,
+    };
+  }
+
   update() {
     this.iter++;
     const rng = seedrandom(this.iter.toString());
