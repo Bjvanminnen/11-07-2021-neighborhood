@@ -54,18 +54,23 @@ export default class World {
     this.background = palette[0];
     palette = palette.slice(1);
 
-    const BUFF = Math.min(width, height) * 0.2;
-    const gap = 100;
+    this.agents = [];
+    this.initializeAgentsGrid(width, height, palette);
+    // this.initializeAgentsQuadrants(width, height, palette);
+  }
 
+  private initializeAgentsGrid(
+    width: number,
+    height: number,
+    palette: string[],
+  ) {
+    const { randRange, sample } = this;
     const centerX = width / 2;
     const centerY = height / 2;
-
-    const jitter = (p: Point, amt = 1): Point => [
-      p[0] + randRange(-amt, amt),
-      p[1] + randRange(-amt, amt),
-    ];
-
+    const BUFF = Math.min(width, height) * 0.2;
+    const gap = 30;
     const mag = 1;
+
     this.agents = [];
     for (let x = centerX - BUFF; x <= centerX + BUFF; x += gap) {
       for (let y = centerY - BUFF; y <= centerY + BUFF; y += gap) {
@@ -78,13 +83,28 @@ export default class World {
         });
       }
     }
+  }
 
-    this.agents = [];
+  private initializeAgentsQuadrants(
+    width: number,
+    height: number,
+    palette: string[],
+  ) {
+    const { randRange } = this;
+
+    const jitter = (p: Point, amt = 1): Point => [
+      p[0] + randRange(-amt, amt),
+      p[1] + randRange(-amt, amt),
+    ];
+
     const quadrants: Point[] = [
       [width * 0.35, height * 0.3],
       [width * 0.65, height * 0.3],
       [(width * 2) / 4, height * 0.7],
     ];
+
+    const mag = 1;
+    this.agents = [];
 
     quadrants.forEach(quad => {
       const jitterAmt = 40;
@@ -146,6 +166,13 @@ export default class World {
       normVector >= normAngle && normVector < normAngle + Math.PI ? 1 : -1;
 
     const nextAngle = angle + radians * sign;
+
+    // TODO:
+    // Right now we move around the circle an amount determined by the magnitude
+    // of the vector.
+    // I explored just updating the vector, and then adjusting the point by the
+    // vectory, but ended up with a lot of tight cycles
+    // Another option would be to
 
     const nextPoint: Point = [
       anchor[0] + Math.cos(nextAngle) * radius,

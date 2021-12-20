@@ -23,12 +23,14 @@ function Instance({
   frame,
   options,
   flipped,
+  overlay,
 }: {
   width: number;
   height: number;
   frame: number;
   options: WorldOptions;
   flipped?: boolean;
+  overlay?: boolean;
 }) {
   const canvasSize = Math.min(width, height);
 
@@ -57,7 +59,7 @@ function Instance({
     world.drawOverlay(ctx);
   };
 
-  const drawers = [onDrawOverlay, onDraw];
+  const drawers = overlay ? [onDrawOverlay, onDraw] : [onDraw];
   if (flipped) {
     drawers.reverse();
   }

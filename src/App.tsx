@@ -23,8 +23,19 @@ function App() {
         options={{
           seed: seed + '',
           paletteIndex: 137,
+          vectorLerp: 0.5,
         }}
       />
+      {/*<Instance
+        width={size}
+        height={size}
+        frame={frame}
+        options={{
+          seed: seed + '',
+          paletteIndex: 137,
+          optionB: true,
+        }}
+      />*/}
       {/*<Instance
         width={width}
         height={height}
