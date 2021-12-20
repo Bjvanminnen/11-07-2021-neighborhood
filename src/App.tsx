@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import useInterval from './useInterval';
 import Instance from './Instance';
 
-const seed = '' || Date.now().toString();
+const seed = '1639978019454' || Date.now().toString();
 console.log('seed:', seed);
 
 function App() {
@@ -20,10 +20,11 @@ function App() {
         width={size}
         height={size}
         frame={frame}
+        overlay
         options={{
           seed: seed + '',
           paletteIndex: 137,
-          vectorLerp: 0.5,
+          vectorLerp: 1,
         }}
       />
       {/*<Instance

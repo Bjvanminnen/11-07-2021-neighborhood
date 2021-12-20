@@ -36,7 +36,7 @@ export function shuffle(array: any[], rng = Math.random) {
     randomIndex;
 
   // While there remain elements to shuffle...
-  while (currentIndex != 0) {
+  while (currentIndex !== 0) {
     // Pick a remaining element...
     randomIndex = Math.floor(rng() * currentIndex);
     currentIndex--;

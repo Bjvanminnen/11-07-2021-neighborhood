@@ -34,7 +34,7 @@ export default class World {
 
   public readonly background: string;
   constructor(width: number, height: number, options: WorldOptions) {
-    const { randRange, sample } = this;
+    const { randRange } = this;
 
     this.rng = seedrandom(options.seed);
 
@@ -49,14 +49,20 @@ export default class World {
       console.log('palette: ', paletteIndex);
     }
 
-    let palette = loadPalette(paletteIndex);
+    // let palette = loadPalette(paletteIndex);
+    // console.log(JSON.stringify(palette));
+    const palette = 'e4ded0-5cada5-181619-e43225'
+      // const palette = 'e4ded0-cc4928-8b728e-181619-3f6634'
+      .split('-')
+      .map(x => '#' + x);
 
     this.background = palette[0];
-    palette = palette.slice(1);
+    palette.shift();
 
     this.agents = [];
-    this.initializeAgentsGrid(width, height, palette);
-    // this.initializeAgentsQuadrants(width, height, palette);
+    // this.initializeAgentsGrid(width, height, palette);
+    this.initializeAgentsQuadrants(width, height, palette);
+    console.log(this.agents);
   }
 
   private initializeAgentsGrid(
@@ -68,7 +74,7 @@ export default class World {
     const centerX = width / 2;
     const centerY = height / 2;
     const BUFF = Math.min(width, height) * 0.2;
-    const gap = 30;
+    const gap = 50;
     const mag = 1;
 
     this.agents = [];
@@ -123,7 +129,7 @@ export default class World {
       this.agents.push({
         point: jitter([quad[0] + 10, quad[1] - 20], jitterAmt),
         vector: [randRange(-mag, mag), randRange(-mag, mag)],
-        color: palette[3],
+        color: palette[0],
       });
     });
   }

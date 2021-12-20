@@ -70,7 +70,7 @@ function Instance({
         <Canvas
           key={i}
           style={{
-            background: i == 0 ? world.background : 'transparent',
+            background: i === 0 ? world.background : 'transparent',
             border: '1px solid black',
             position: 'absolute',
             left: 0,
