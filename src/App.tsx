@@ -27,7 +27,7 @@ function App() {
           vectorLerp: 1,
         }}
       />
-      {/*<Instance
+      <Instance
         width={size}
         height={size}
         frame={frame}
@@ -36,7 +36,8 @@ function App() {
           paletteIndex: 137,
           optionB: true,
         }}
-      />*/}
+        overlay
+      />
       {/*<Instance
         width={width}
         height={height}

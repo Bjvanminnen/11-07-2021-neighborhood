@@ -24,6 +24,7 @@ export interface WorldOptions {
   seed: string;
   paletteIndex?: number;
   vectorLerp?: number;
+  optionB?: boolean;
 }
 
 export default class World {
@@ -41,6 +42,7 @@ export default class World {
     this.options = {
       paletteIndex: ~~randRange(0, 1000),
       vectorLerp: 1,
+      optionB: false,
       ...options,
     };
 
@@ -62,7 +64,6 @@ export default class World {
     this.agents = [];
     // this.initializeAgentsGrid(width, height, palette);
     this.initializeAgentsQuadrants(width, height, palette);
-    console.log(this.agents);
   }
 
   private initializeAgentsGrid(
@@ -139,6 +140,37 @@ export default class World {
 
   private sample = <T extends unknown>(rg: T[]): T => utilSample(this.rng, rg);
 
+  /**
+   * Given an anchor point and an agent, determine whether the agent should
+   * rotate clockwise (1)  or counter-clockwise (-1)
+   */
+  static getDirection(anchor: Point, agent: Agent): number {
+    const dx = agent.point[0] - anchor[0];
+    const dy = agent.point[1] - anchor[1];
+
+    // the angle of the line from anchor to point, where a line straight
+    // to the right is 0 and we increase CW
+    const angle = Math.atan2(dy, dx);
+
+    // angle of the line from anchor to point with vector applied
+    const vectorAngle = Math.atan2(
+      agent.point[1] + agent.vector[1] - anchor[1],
+      agent.point[0] + agent.vector[0] - anchor[0],
+    );
+
+    let normAngle = normalizedAngle(angle);
+    let normVector = normalizedAngle(vectorAngle);
+    if (normAngle > Math.PI) {
+      normAngle -= Math.PI;
+      normVector = normalizedAngle(normVector - Math.PI);
+    }
+    // 1 for clockwise, -1 for counter clockwise
+    const sign =
+      normVector >= normAngle && normVector < normAngle + Math.PI ? 1 : -1;
+
+    return sign;
+  }
+
   private updateSingle(current: Agent, anchor: Point): Agent {
     // the x and y of the line from point to anchor
     const dx = current.point[0] - anchor[0];
@@ -152,33 +184,13 @@ export default class World {
     // how far around the circle to move
     const radians = magnitude / radius;
 
+    // 1 for clockwise, -1 for counter clockwise
+    const sign = World.getDirection(anchor, current);
+
     // the angle of the line from anchor to point, where a line straight
     // to the right is 0 and we increase CW
     const angle = Math.atan2(dy, dx);
-
-    const vectorAngle = Math.atan2(
-      current.point[1] + current.vector[1] - anchor[1],
-      current.point[0] + current.vector[0] - anchor[0],
-    );
-
-    let normAngle = normalizedAngle(angle);
-    let normVector = normalizedAngle(vectorAngle);
-    if (normAngle > Math.PI) {
-      normAngle -= Math.PI;
-      normVector = normalizedAngle(normVector - Math.PI);
-    }
-    // 1 for clockwise, -1 for counter clockwise
-    const sign =
-      normVector >= normAngle && normVector < normAngle + Math.PI ? 1 : -1;
-
     const nextAngle = angle + radians * sign;
-
-    // TODO:
-    // Right now we move around the circle an amount determined by the magnitude
-    // of the vector.
-    // I explored just updating the vector, and then adjusting the point by the
-    // vectory, but ended up with a lot of tight cycles
-    // Another option would be to
 
     const nextPoint: Point = [
       anchor[0] + Math.cos(nextAngle) * radius,

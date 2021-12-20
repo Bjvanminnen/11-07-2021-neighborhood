@@ -44,6 +44,12 @@ function App() {
 
   const [frame, setFrame] = useState(0);
 
+  const baseAnchor: Point = [100, 200];
+  let baseAgent: Agent = {
+    point: [200, 240],
+    vector: [-1, -0.5],
+  };
+
   const onDraw = (ctx: CanvasRenderingContext2D) => {
     onDrawCircle(ctx);
     onDrawSquare(ctx);
@@ -51,11 +57,10 @@ function App() {
 
   const onDrawCircle = (ctx: CanvasRenderingContext2D) => {
     const world = new World(size, size, { seed: '123' });
-    const anchor: Point = [100, 200];
-
+    const anchor: Point = [...baseAnchor] as Point;
     let agent: Agent = {
-      point: [200, 240],
-      vector: [-1, -1],
+      point: [...baseAgent.point] as Point,
+      vector: [...baseAgent.vector] as Point,
     };
 
     ctx.fillStyle = 'black';
@@ -64,6 +69,8 @@ function App() {
     drawCircle(ctx, anchor, agent.point);
     fillCircle(ctx, agent.point, 5);
     drawVector(ctx, agent.point, agent.vector, 40);
+
+    console.log(World.getDirection(anchor, agent));
 
     ctx.fillStyle = 'red';
     ctx.strokeStyle = 'red';
@@ -76,11 +83,10 @@ function App() {
 
   const onDrawSquare = (ctx: CanvasRenderingContext2D) => {
     const world = new World(size, size, { seed: '123' });
-    const anchor: Point = [100, 200];
-
+    const anchor: Point = [...baseAnchor] as Point;
     let agent: Agent = {
-      point: [200, 240],
-      vector: [-1, -1],
+      point: [...baseAgent.point] as Point,
+      vector: [...baseAgent.vector] as Point,
     };
 
     ctx.fillStyle = 'black';
