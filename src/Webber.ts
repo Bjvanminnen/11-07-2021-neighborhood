@@ -4,12 +4,18 @@ type WebMWriter = any;
 
 export default class Giffer {
   encoder?: WebMWriter;
+  enabled?: boolean;
 
   constructor() {
     this.encoder = undefined;
+    this.enabled = true;
   }
 
   addFrame(ctx: CanvasRenderingContext2D) {
+    if (!this.enabled) {
+      return;
+    }
+
     if (!this.encoder) {
       this.encoder = new WebMWriter({
         frameDuration: 20,
@@ -19,6 +25,9 @@ export default class Giffer {
   }
 
   async finish(open = true) {
+    if (!this.enabled) {
+      return;
+    }
     const { encoder } = this;
     if (!encoder) {
       throw new Error('no encoder');

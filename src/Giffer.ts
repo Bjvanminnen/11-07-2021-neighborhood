@@ -8,7 +8,7 @@ export default class Giffer {
 
   constructor(private readonly delay = 0) {
     this.encoder = undefined;
-    this.enabled = false;
+    this.enabled = true;
   }
 
   addFrame(ctx: CanvasRenderingContext2D) {

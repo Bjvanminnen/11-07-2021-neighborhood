@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 // import seedrandom from 'seedrandom';
 import Canvas from './Canvas';
 import World, { WorldOptions } from './World';
-import Giffer from './Giffer';
+import Giffer from './Webber';
 
 // TODO: account for torroidal nature
 // might actually want to no have it be torroidal
@@ -33,7 +33,7 @@ function Instance({
   overlay?: boolean;
 }) {
   const [world] = useState(() => new World(width, height, options));
-  // const [giffer] = useState(() => new Giffer());
+  const [giffer] = useState(() => new Giffer());
 
   useEffect(() => {
     world.update();
@@ -46,18 +46,30 @@ function Instance({
     // }
 
     world.draw(ctx, '02');
-
-    // giffer.addFrame(ctx);
-    // if (frame === 1500) {
-    //   giffer.finish(true);
-    // }
   };
 
   const onDrawOverlay = (ctx: CanvasRenderingContext2D) => {
     world.drawOverlay(ctx);
   };
 
-  const drawers = overlay ? [onDrawOverlay, onDraw] : [onDraw];
+  const onDrawCombined = (ctx: CanvasRenderingContext2D) => {
+    const canvases = ctx?.canvas?.parentElement?.querySelectorAll('canvas');
+    ctx.fillStyle = world.background;
+    ctx.fillRect(0, 0, width, height);
+    if (canvases?.[0]) {
+      ctx.drawImage(canvases[0], 0, 0);
+    }
+    if (canvases?.[1]) {
+      ctx.drawImage(canvases[1], 0, 0);
+    }
+    giffer.addFrame(ctx);
+    if (frame === 1200) {
+      console.log('finish');
+      giffer.finish(true);
+    }
+  };
+
+  const drawers = overlay ? [onDrawOverlay, onDraw, onDrawCombined] : [onDraw];
   if (flipped) {
     drawers.reverse();
   }
@@ -69,22 +81,22 @@ function Instance({
     const canvases = parent?.querySelectorAll('canvas');
     // TODO: read from both, write to a new canvas, read from that, save as
     // image
-    const canvas = document.createElement('canvas');
-    canvas.setAttribute('width', width.toString());
-    canvas.setAttribute('height', height.toString());
-    const ctx = canvas.getContext('2d');
-    if (!ctx || !canvases) {
-      return;
-    }
+    // const canvas = document.createElement('canvas');
+    // canvas.setAttribute('width', width.toString());
+    // canvas.setAttribute('height', height.toString());
+    // const ctx = canvas.getContext('2d');
+    // if (!ctx || !canvases) {
+    //   return;
+    // }
 
     console.log(`seed: ${options.seed} frame: ${frame}`);
-    ctx.fillStyle = world.background;
-    ctx.fillRect(0, 0, width, height);
-    Array.from(canvases).forEach(canvas => {
-      ctx.drawImage(canvas, 0, 0);
-    });
+    // ctx.fillStyle = world.background;
+    // ctx.fillRect(0, 0, width, height);
+    // Array.from(canvases).forEach(canvas => {
+    //   ctx.drawImage(canvas, 0, 0);
+    // });
 
-    canvas.toBlob(blob => {
+    canvases?.[2]?.toBlob(blob => {
       const obj = URL.createObjectURL(blob);
       window.open(obj);
     });
@@ -100,6 +112,7 @@ function Instance({
             // border: '1px solid black',
             position: 'absolute',
             left: 0,
+            display: i < 2 ? 'none' : 'default',
           }}
           width={width}
           height={height}
@@ -107,13 +120,9 @@ function Instance({
           frame={frame}
         />
       ))}
-      <div>
-        <button
-          style={{ position: 'absolute', left: width + 10 }}
-          onClick={handleSave}
-        >
-          Save
-        </button>
+      <div style={{ position: 'absolute', left: width + 10 }}>
+        <button onClick={handleSave}>Save {~~(frame / 100) * 100}</button>
+        <div>{options.seed}</div>
       </div>
     </div>
   );

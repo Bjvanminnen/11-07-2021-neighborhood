@@ -17,3 +17,7 @@ export function loadPalette(...indices: number[]) {
   });
   return palette;
 }
+
+export function coolorPalette(palette: string): string[] {
+  return palette.split('-').map(x => '#' + x);
+}

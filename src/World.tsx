@@ -11,7 +11,7 @@ import {
   vectorRadians,
 } from './utils';
 import { drawAgent, drawPoint, drawTriangle, drawCircle } from './drawUtils';
-import { loadPalette } from './palettes';
+import { loadPalette, coolorPalette } from './palettes';
 
 const TAU = 2 * Math.PI;
 
@@ -56,17 +56,14 @@ export default class World {
 
     // let palette = loadPalette(paletteIndex);
     // console.log(JSON.stringify(palette));
-    const palette = 'e4ded0-5cada5-181619-e43225'
-      // const palette = 'e4ded0-cc4928-8b728e-181619-3f6634'
-      .split('-')
-      .map(x => '#' + x);
+    const palette = coolorPalette('333745-e63462-fe5f55-c7efcf-eef5db');
 
     this.background = palette[0];
     palette.shift();
 
     this.agents = [];
-    this.initializeAgentsGrid(width, height, palette);
-    // this.initializeAgentsQuadrants(width, height, palette);
+    // this.initializeAgentsGrid(width, height, palette);
+    this.initializeAgentsQuadrants(width, height, palette);
   }
 
   private initializeAgentsGrid(
@@ -77,9 +74,9 @@ export default class World {
     const { randRange, sample } = this;
     const centerX = width / 2;
     const centerY = height / 2;
-    const BUFF = Math.min(width, height) * 0.1;
-    const gap = 60;
-    const mag = 2;
+    const BUFF = Math.min(width, height) * 0.08;
+    const gap = 40;
+    const mag = 1;
 
     const jitter = (p: Point, amt = 1): Point => [
       p[0] + randRange(-amt, amt),
@@ -87,7 +84,7 @@ export default class World {
     ];
 
     this.agents = [];
-    for (let x = centerX - BUFF * 2; x <= centerX + BUFF * 2; x += gap) {
+    for (let x = centerX - BUFF; x <= centerX + BUFF; x += gap) {
       for (let y = centerY - BUFF; y <= centerY + BUFF; y += gap) {
         this.agents.push({
           id: [x, y].join(','),
@@ -113,32 +110,38 @@ export default class World {
     ];
 
     const quadrants: Point[] = [
-      [width * 0.35, height * 0.3],
-      [width * 0.65, height * 0.3],
-      [(width * 2) / 4, height * 0.7],
+      [width * 0.35, height * 0.5],
+      [width * 0.65, height * 0.5],
+      // [(width * 2) / 4, height * 0.6],
     ];
 
     const mag = 1;
     this.agents = [];
 
     quadrants.forEach(quad => {
-      const jitterAmt = 40;
+      const jitterAmt = 20;
       this.agents.push({
         point: jitter(quad, jitterAmt),
+        vector: [randRange(-mag, mag), randRange(-mag, mag)],
+        color: palette[0],
+      });
+
+      this.agents.push({
+        point: jitter([quad[0] + 5, quad[1]], jitterAmt),
         vector: [randRange(-mag, mag), randRange(-mag, mag)],
         color: palette[1],
       });
 
       this.agents.push({
-        point: jitter([quad[0] + 50, quad[1]], jitterAmt),
+        point: jitter([quad[0] + 1, quad[1] - 2], jitterAmt),
         vector: [randRange(-mag, mag), randRange(-mag, mag)],
         color: palette[2],
       });
 
       this.agents.push({
-        point: jitter([quad[0] + 10, quad[1] - 20], jitterAmt),
+        point: jitter([quad[0] - 4, quad[1] + 2], jitterAmt),
         vector: [randRange(-mag, mag), randRange(-mag, mag)],
-        color: palette[0],
+        color: palette[3],
       });
     });
   }
@@ -331,7 +334,7 @@ export default class World {
 
     ctx.globalCompositeOperation = 'source-over';
     ctx.strokeStyle = 'gray';
-    agents.forEach(agent => drawPoint(ctx, agent.point, 1, agent.color + 'a0'));
+    agents.forEach(agent => drawPoint(ctx, agent.point, 1, agent.color + '80'));
   }
 
   drawOverlay(ctx: CanvasRenderingContext2D) {
@@ -341,7 +344,7 @@ export default class World {
     // ctx.clearRect(0, 0, width, height);
     for (let i = 0; i < shuffled.length; i++) {
       const neighbor = this.findNearest(shuffled, shuffled[i]);
-      ctx.strokeStyle = neighbor.color + '08';
+      ctx.strokeStyle = neighbor.color + '05';
       drawCircle(ctx, shuffled[i].point, neighbor.point);
     }
   }
