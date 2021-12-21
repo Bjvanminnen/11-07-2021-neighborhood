@@ -79,7 +79,7 @@ export default class World {
     const centerY = height / 2;
     const BUFF = Math.min(width, height) * 0.1;
     const gap = 60;
-    const mag = 1;
+    const mag = 2;
 
     const jitter = (p: Point, amt = 1): Point => [
       p[0] + randRange(-amt, amt),
@@ -87,11 +87,11 @@ export default class World {
     ];
 
     this.agents = [];
-    for (let x = centerX - BUFF; x <= centerX + BUFF; x += gap) {
+    for (let x = centerX - BUFF * 2; x <= centerX + BUFF * 2; x += gap) {
       for (let y = centerY - BUFF; y <= centerY + BUFF; y += gap) {
         this.agents.push({
           id: [x, y].join(','),
-          point: jitter([x, y], 5),
+          point: jitter([x, y], 10),
           vector: [randRange(-mag, mag), randRange(-mag, mag)],
           // color: this.rng() < 0.2 ? this.background : sample(palette),
           color: sample(palette),
@@ -331,7 +331,7 @@ export default class World {
 
     ctx.globalCompositeOperation = 'source-over';
     ctx.strokeStyle = 'gray';
-    agents.forEach(agent => drawPoint(ctx, agent.point, 1, agent.color + '88'));
+    agents.forEach(agent => drawPoint(ctx, agent.point, 1, agent.color + 'a0'));
   }
 
   drawOverlay(ctx: CanvasRenderingContext2D) {
@@ -341,7 +341,7 @@ export default class World {
     // ctx.clearRect(0, 0, width, height);
     for (let i = 0; i < shuffled.length; i++) {
       const neighbor = this.findNearest(shuffled, shuffled[i]);
-      ctx.strokeStyle = neighbor.color + '05';
+      ctx.strokeStyle = neighbor.color + '08';
       drawCircle(ctx, shuffled[i].point, neighbor.point);
     }
   }

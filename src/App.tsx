@@ -2,32 +2,39 @@ import React, { useState } from 'react';
 import useInterval from './useInterval';
 import Instance from './Instance';
 
-const seed = '' || Date.now().toString();
+const seed = '1640060233657' || Date.now().toString();
 console.log('seed:', seed);
 
 function App() {
   const size = 1500;
+  const MAX_FRAME = 5000;
 
   const [frame, setFrame] = useState(0);
 
   useInterval(() => {
+    if (frame + 1 > MAX_FRAME) {
+      return;
+    }
     setFrame(x => x + 1);
   }, 20);
 
   return (
-    <div style={{ display: 'flex' }}>
-      <Instance
-        width={size}
-        height={size}
-        frame={frame}
-        overlay
-        options={{
-          seed: seed + '',
-          paletteIndex: 137,
-          vectorLerp: 1,
-          optionB: true,
-        }}
-      />
+    <div style={{ display: 'default' }}>
+      {Array.from({ length: 10 }).map((_, i) => (
+        <Instance
+          key={i}
+          width={1600}
+          height={900}
+          frame={frame}
+          overlay
+          options={{
+            seed: seed + i,
+            paletteIndex: 137,
+            vectorLerp: 1,
+            optionB: true,
+          }}
+        />
+      ))}
       {/*<Instance
         width={size}
         height={size}

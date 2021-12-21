@@ -32,10 +32,8 @@ function Instance({
   flipped?: boolean;
   overlay?: boolean;
 }) {
-  const canvasSize = Math.min(width, height);
-
   const [world] = useState(() => new World(width, height, options));
-  const [giffer] = useState(() => new Giffer());
+  // const [giffer] = useState(() => new Giffer());
 
   useEffect(() => {
     world.update();
@@ -49,10 +47,10 @@ function Instance({
 
     world.draw(ctx, '02');
 
-    giffer.addFrame(ctx);
-    if (frame === 1500) {
-      giffer.finish(true);
-    }
+    // giffer.addFrame(ctx);
+    // if (frame === 1500) {
+    //   giffer.finish(true);
+    // }
   };
 
   const onDrawOverlay = (ctx: CanvasRenderingContext2D) => {
@@ -79,6 +77,7 @@ function Instance({
       return;
     }
 
+    console.log(`seed: ${options.seed} frame: ${frame}`);
     ctx.fillStyle = world.background;
     ctx.fillRect(0, 0, width, height);
     Array.from(canvases).forEach(canvas => {
@@ -98,19 +97,19 @@ function Instance({
           key={i}
           style={{
             background: i === 0 ? world.background : 'transparent',
-            border: '1px solid black',
+            // border: '1px solid black',
             position: 'absolute',
             left: 0,
           }}
-          width={canvasSize}
-          height={canvasSize}
+          width={width}
+          height={height}
           onDraw={drawer}
           frame={frame}
         />
       ))}
       <div>
         <button
-          style={{ position: 'absolute', left: canvasSize + 10 }}
+          style={{ position: 'absolute', left: width + 10 }}
           onClick={handleSave}
         >
           Save
