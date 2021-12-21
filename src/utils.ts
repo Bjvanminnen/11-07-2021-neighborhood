@@ -4,6 +4,9 @@ export type Vector = [number, number];
 
 export const radToDeg = (radians: number) => (radians * 360) / (2 * Math.PI);
 
+export const vectorRadians = (vector: Vector) =>
+  normalizedAngle(Math.atan2(vector[1], vector[0]));
+
 export const normalizedAngle = (radians: number) =>
   radians < 0 ? radians + 2 * Math.PI : radians;
 

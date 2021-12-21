@@ -64,6 +64,15 @@ function Instance({
     drawers.reverse();
   }
 
+  const handleSave = (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+  ) => {
+    const parent = event?.currentTarget?.parentElement?.parentElement;
+    const canvases = parent?.querySelectorAll('canvas');
+    // TODO: read from both, write to a new canvas, read from that, save as
+    // image
+  };
+
   return (
     <div style={{ margin: 10, position: 'relative', width, height }}>
       {drawers.map((drawer, i) => (
@@ -81,6 +90,14 @@ function Instance({
           frame={frame}
         />
       ))}
+      <div>
+        <button
+          style={{ position: 'absolute', left: canvasSize + 10 }}
+          onClick={handleSave}
+        >
+          Save
+        </button>
+      </div>
     </div>
   );
 }

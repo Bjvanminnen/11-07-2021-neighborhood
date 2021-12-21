@@ -1,11 +1,18 @@
 import React, { useState } from 'react';
 import Canvas from './Canvas';
 import { strokeCircle, drawCircle, fillCircle } from './drawUtils';
-import { Point } from './utils';
+import { Point, vectorRadians } from './utils';
 import World, { Agent } from './World';
 
 const seed = '1639978019454' || Date.now().toString();
 console.log('seed:', seed);
+
+function drawLine(ctx: CanvasRenderingContext2D, a: Point, b: Point) {
+  ctx.beginPath();
+  ctx.moveTo(...a);
+  ctx.lineTo(...b);
+  ctx.stroke();
+}
 
 function drawVector(
   ctx: CanvasRenderingContext2D,
@@ -13,13 +20,11 @@ function drawVector(
   vector: Point,
   magnitude = 1,
 ) {
-  ctx.beginPath();
-  ctx.moveTo(
-    point[0] - vector[0] * magnitude,
-    point[1] - vector[1] * magnitude,
+  drawLine(
+    ctx,
+    [point[0] - vector[0] * magnitude, point[1] - vector[1] * magnitude],
+    point,
   );
-  ctx.lineTo(...point);
-  ctx.stroke();
 }
 
 function drawSquare(
@@ -44,14 +49,14 @@ function App() {
 
   const [frame, setFrame] = useState(0);
 
-  const baseAnchor: Point = [100, 200];
+  const baseAnchor: Point = [200, 300];
   let baseAgent: Agent = {
-    point: [200, 240],
-    vector: [-1, -0.5],
+    point: [baseAnchor[0] + 120, baseAnchor[1] - 100],
+    vector: [1, -1.7],
   };
 
   const onDraw = (ctx: CanvasRenderingContext2D) => {
-    onDrawCircle(ctx);
+    // onDrawCircle(ctx);
     onDrawSquare(ctx);
   };
 
@@ -67,10 +72,9 @@ function App() {
     ctx.strokeStyle = 'black';
     fillCircle(ctx, anchor, 5);
     drawCircle(ctx, anchor, agent.point);
+    drawLine(ctx, anchor, agent.point);
     fillCircle(ctx, agent.point, 5);
     drawVector(ctx, agent.point, agent.vector, 40);
-
-    console.log(World.getDirection(anchor, agent));
 
     ctx.fillStyle = 'red';
     ctx.strokeStyle = 'red';
@@ -95,6 +99,14 @@ function App() {
     drawSquare(ctx, anchor, agent.point);
     fillCircle(ctx, agent.point, 5);
     drawVector(ctx, agent.point, agent.vector, 40);
+
+    ctx.fillStyle = 'blue';
+    ctx.strokeStyle = 'blue';
+    for (let i = 0; i < 1; i++) {
+      agent = (world as any).updateSingleSquare(agent, anchor);
+      strokeCircle(ctx, agent.point, 5);
+      drawVector(ctx, agent.point, agent.vector, 40);
+    }
   };
 
   return (

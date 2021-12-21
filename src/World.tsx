@@ -8,9 +8,12 @@ import {
   Vector,
   lerpPoint,
   shuffle,
+  vectorRadians,
 } from './utils';
 import { drawAgent, drawPoint, drawTriangle, drawCircle } from './drawUtils';
 import { loadPalette } from './palettes';
+
+const TAU = 2 * Math.PI;
 
 export interface Agent {
   id?: string;
@@ -62,8 +65,8 @@ export default class World {
     palette.shift();
 
     this.agents = [];
-    // this.initializeAgentsGrid(width, height, palette);
-    this.initializeAgentsQuadrants(width, height, palette);
+    this.initializeAgentsGrid(width, height, palette);
+    // this.initializeAgentsQuadrants(width, height, palette);
   }
 
   private initializeAgentsGrid(
@@ -74,16 +77,21 @@ export default class World {
     const { randRange, sample } = this;
     const centerX = width / 2;
     const centerY = height / 2;
-    const BUFF = Math.min(width, height) * 0.2;
-    const gap = 50;
+    const BUFF = Math.min(width, height) * 0.1;
+    const gap = 60;
     const mag = 1;
+
+    const jitter = (p: Point, amt = 1): Point => [
+      p[0] + randRange(-amt, amt),
+      p[1] + randRange(-amt, amt),
+    ];
 
     this.agents = [];
     for (let x = centerX - BUFF; x <= centerX + BUFF; x += gap) {
       for (let y = centerY - BUFF; y <= centerY + BUFF; y += gap) {
         this.agents.push({
           id: [x, y].join(','),
-          point: [x, y],
+          point: jitter([x, y], 5),
           vector: [randRange(-mag, mag), randRange(-mag, mag)],
           // color: this.rng() < 0.2 ? this.background : sample(palette),
           color: sample(palette),
@@ -172,6 +180,9 @@ export default class World {
   }
 
   private updateSingle(current: Agent, anchor: Point): Agent {
+    if (this.options.optionB) {
+      return this.updateSingleSquare(current, anchor);
+    }
     // the x and y of the line from point to anchor
     const dx = current.point[0] - anchor[0];
     const dy = current.point[1] - anchor[1];
@@ -212,14 +223,62 @@ export default class World {
   }
 
   private updateSingleSquare(current: Agent, anchor: Point): Agent {
+    const root2 = Math.sqrt(2) / 2;
+    const northeast: Vector = [root2, -root2];
+    const southeast: Vector = [root2, root2];
+    const northwest: Vector = [-root2, -root2];
+    const southwest: Vector = [-root2, root2];
+
     const dx = current.point[0] - anchor[0];
     const dy = current.point[1] - anchor[1];
 
-    const radius = Math.abs(dx) + Math.abs(dy);
+    const magnitude = Math.sqrt(
+      current.vector[0] ** 2 + current.vector[1] ** 2,
+    );
+
+    const angle = vectorRadians([dx, dy]);
+    const vectorAngle = vectorRadians([-current.vector[0], -current.vector[1]]);
+
+    let nextVector: Vector;
+    const quadrant = ~~((angle / TAU) * 4);
+
+    const norm = (quadrant / 4 + 1 / 8) * TAU;
+
+    // TODO lt vs lte
+    if (quadrant === 0) {
+      // SE quadrant
+      const clockwise = vectorAngle < norm || vectorAngle > norm + Math.PI;
+      nextVector = clockwise ? southwest : northeast;
+    } else if (quadrant === 1) {
+      // SW quadrant
+      const clockwise = vectorAngle < norm || vectorAngle > norm + Math.PI;
+      nextVector = clockwise ? northwest : southeast;
+    } else if (quadrant === 2) {
+      // NW quadrant
+      const clockwise = vectorAngle < norm && vectorAngle > norm - Math.PI;
+      nextVector = clockwise ? northeast : southwest;
+    } else {
+      // NE quadrant
+      const clockwise = vectorAngle < norm && vectorAngle > norm - Math.PI;
+      nextVector = clockwise ? southeast : northwest;
+    }
+
+    // TODO: really i want to lerp the angle, not the vector
+    nextVector = lerpPoint(
+      current.vector,
+      [nextVector[0] * magnitude, nextVector[1] * magnitude],
+      this.options.vectorLerp,
+    );
+    const nextPoint: Point = [
+      current.point[0] + nextVector[0],
+      current.point[1] + nextVector[1],
+    ];
 
     return {
       ...current,
       iter: (current.iter ?? 0) + 1,
+      vector: nextVector,
+      point: nextPoint,
     };
   }
 
