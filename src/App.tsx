@@ -6,7 +6,7 @@ const seed = '' || Date.now().toString();
 console.log('seed:', seed);
 
 function App() {
-  const size = 600;
+  const size = 1500;
 
   const [frame, setFrame] = useState(0);
 

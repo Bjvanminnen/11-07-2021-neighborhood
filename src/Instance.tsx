@@ -71,6 +71,24 @@ function Instance({
     const canvases = parent?.querySelectorAll('canvas');
     // TODO: read from both, write to a new canvas, read from that, save as
     // image
+    const canvas = document.createElement('canvas');
+    canvas.setAttribute('width', width.toString());
+    canvas.setAttribute('height', height.toString());
+    const ctx = canvas.getContext('2d');
+    if (!ctx || !canvases) {
+      return;
+    }
+
+    ctx.fillStyle = world.background;
+    ctx.fillRect(0, 0, width, height);
+    Array.from(canvases).forEach(canvas => {
+      ctx.drawImage(canvas, 0, 0);
+    });
+
+    canvas.toBlob(blob => {
+      const obj = URL.createObjectURL(blob);
+      window.open(obj);
+    });
   };
 
   return (
