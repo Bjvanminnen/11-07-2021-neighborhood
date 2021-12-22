@@ -4,11 +4,9 @@ type GIFEncoder = any;
 
 export default class Giffer {
   encoder?: GIFEncoder;
-  enabled: boolean;
 
-  constructor(private readonly delay = 0) {
+  constructor(private readonly enabled: boolean) {
     this.encoder = undefined;
-    this.enabled = true;
   }
 
   addFrame(ctx: CanvasRenderingContext2D) {
@@ -18,7 +16,7 @@ export default class Giffer {
 
     if (!this.encoder) {
       const { width, height } = ctx.canvas;
-      this.encoder = new GIFEncoder(width, height, 'octree', true);
+      this.encoder = new GIFEncoder(width, height, 'octree', false);
       this.encoder.start();
       // this.encoder.setDelay(this.delay);
       this.encoder.setFrameRate(60);

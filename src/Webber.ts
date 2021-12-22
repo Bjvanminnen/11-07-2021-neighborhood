@@ -4,11 +4,9 @@ type WebMWriter = any;
 
 export default class Giffer {
   encoder?: WebMWriter;
-  enabled?: boolean;
 
-  constructor() {
+  constructor(private readonly enabled: boolean) {
     this.encoder = undefined;
-    this.enabled = true;
   }
 
   addFrame(ctx: CanvasRenderingContext2D) {

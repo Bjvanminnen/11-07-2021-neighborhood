@@ -6,7 +6,7 @@ const seed = '1640072864886' || Date.now().toString();
 console.log('seed:', seed);
 
 function App() {
-  const MAX_FRAME = 1200;
+  const MAX_FRAME = 1000;
 
   const [frame, setFrame] = useState(0);
 
@@ -25,6 +25,7 @@ function App() {
           width={500}
           height={500}
           frame={frame}
+          maxFrame={MAX_FRAME}
           overlay
           options={{
             seed: seed + (i === 0 ? '' : i),

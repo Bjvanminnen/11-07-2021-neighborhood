@@ -21,6 +21,7 @@ function Instance({
   width,
   height,
   frame,
+  maxFrame,
   options,
   flipped,
   overlay,
@@ -28,12 +29,13 @@ function Instance({
   width: number;
   height: number;
   frame: number;
+  maxFrame?: number;
   options: WorldOptions;
   flipped?: boolean;
   overlay?: boolean;
 }) {
   const [world] = useState(() => new World(width, height, options));
-  const [giffer] = useState(() => new Giffer());
+  const [giffer] = useState(() => new Giffer(true));
 
   useEffect(() => {
     world.update();
@@ -63,7 +65,7 @@ function Instance({
       ctx.drawImage(canvases[1], 0, 0);
     }
     giffer.addFrame(ctx);
-    if (frame === 1200) {
+    if (frame === maxFrame) {
       console.log('finish');
       giffer.finish(true);
     }
