@@ -21,14 +21,18 @@ function pickOption(options: any[], freqs: number[], val: number) {
 export default function generateFeatures(rng: () => number) {
   const features = {
     // TODO: might rename to something like theme?
-    season: pickOption(['winter', 'autumn', 'spring'], [0.7, 0.2, 0.1], rng()),
+    theme: pickOption(
+      ['retro', 'earthworm', 'mint'],
+      [0.33, 0.33, 0.33],
+      rng(),
+    ),
     density: pickOption(
       ['standard', 'clustered', 'dense'],
       [0.5, 0.4, 0.1],
       rng(),
     ),
     speed: pickOption(['standard', 'fast', 'slow'], [0.65, 0.3, 0.05], rng()),
-    dot: pickOption(['standard', 'small', 'big'], [0.5, 0.4, 0.1], rng()),
+    dot: pickOption(['standard', 'small', 'big'], [0.5, 0.3, 0.2], rng()),
   };
 
   if (features.speed === 'fast' && features.dot === 'small') {

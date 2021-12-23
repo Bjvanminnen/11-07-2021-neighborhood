@@ -22,3 +22,17 @@ export function loadPalette(...indices: number[]) {
 export function coolorPalette(palette: string): string[] {
   return palette.split('-').map(x => '#' + x);
 }
+
+export function toCoolor(palette: string[] | null) {
+  if (!palette) {
+    return '';
+  }
+  return palette
+    .map(x =>
+      x
+        .split('')
+        .slice(1)
+        .join(''),
+    )
+    .join('-');
+}

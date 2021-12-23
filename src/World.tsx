@@ -116,7 +116,7 @@ export default class World {
     height: number,
     palette: string[],
   ) {
-    const { randRange } = this;
+    const { randRange, sample } = this;
 
     const jitter = (p: Point, amt = 1): Point => [
       p[0] + randRange(-amt, amt),
@@ -140,26 +140,38 @@ export default class World {
       this.agents.push({
         point: jitter(quad, jitterAmt),
         vector: [randRange(-mag, mag), randRange(-mag, mag)],
-        color: palette[0],
+        // color: palette[0],
+        color: sample(palette),
       });
 
       this.agents.push({
         point: jitter([quad[0] + 5, quad[1]], jitterAmt),
         vector: [randRange(-mag, mag), randRange(-mag, mag)],
-        color: palette[1],
+        // color: palette[1],
+        color: sample(palette),
       });
 
       this.agents.push({
         point: jitter([quad[0] + 1, quad[1] - 2], jitterAmt),
         vector: [randRange(-mag, mag), randRange(-mag, mag)],
-        color: palette[2],
+        // color: palette[2],
+        color: sample(palette),
       });
 
       this.agents.push({
         point: jitter([quad[0] - 4, quad[1] + 2], jitterAmt),
         vector: [randRange(-mag, mag), randRange(-mag, mag)],
-        color: palette[3],
+        // color: palette[3],
+        color: sample(palette),
       });
+
+      // palette.slice(4).forEach(color =>
+      //   this.agents.push({
+      //     point: jitter([quad[0], quad[1]], jitterAmt),
+      //     vector: [randRange(-mag, mag), randRange(-mag, mag)],
+      //     color,
+      //   }),
+      // );
     });
   }
 
