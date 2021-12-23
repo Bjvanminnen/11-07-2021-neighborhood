@@ -30,7 +30,7 @@ export default function generateFeatures(rng: () => number) {
       rng(),
     ),
     speed: pickOption(['standard', 'fast', 'slow'], [0.65, 0.3, 0.05], rng()),
-    dot: pickOption(['standard', 'small', 'big'], [0.5, 0.3, 0.2], rng()),
+    dot: pickOption(['standard', 'small', 'big'], [0.5, 0.2, 0.3], rng()),
   };
 
   if (features.speed === 'fast' && features.dot === 'small') {
