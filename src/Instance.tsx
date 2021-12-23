@@ -105,7 +105,7 @@ function Instance({
   };
 
   return (
-    <div style={{ margin: 10, position: 'relative', width, height }}>
+    <div style={{ position: 'relative' }}>
       {drawers.map((drawer, i) => (
         <Canvas
           key={i}
@@ -113,9 +113,11 @@ function Instance({
           style={{
             background: i === 0 ? world.background : 'transparent',
             // border: '1px solid black',
-            position: 'absolute',
-            left: 0,
+            // position: 'absolute',
+            // left: 0,
             display: i < 2 ? 'none' : 'default',
+            width: '100%',
+            height: '100%',
           }}
           width={width}
           height={height}

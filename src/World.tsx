@@ -109,9 +109,12 @@ export default class World {
       p[1] + randRange(-amt, amt),
     ];
 
+    const BUFF = 100;
     const quadrants: Point[] = [
-      [width * 0.35, height * 0.5],
-      [width * 0.65, height * 0.5],
+      [width / 2 - BUFF, height / 2],
+      [width / 2 + BUFF, height / 2],
+      // [width * 0.35, height * 0.5],
+      // [width * 0.65, height * 0.5],
       // [(width * 2) / 4, height * 0.6],
     ];
 

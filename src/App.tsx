@@ -1,14 +1,21 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import useInterval from './useInterval';
 import Instance from './Instance';
 
-const seed = (window as any).fxhash;
+const seed = (window as any).fxhash ?? 'test';
 console.log('seed:', seed);
 
 function App() {
-  const MAX_FRAME = 1000;
+  const MAX_FRAME = Infinity;
 
   const [frame, setFrame] = useState(0);
+  const [width, setWidth] = useState<number | null>(null);
+  const [height, setHeight] = useState<number | null>(null);
+
+  useEffect(() => {
+    setWidth(window.innerWidth);
+    setHeight(window.innerHeight);
+  }, []);
 
   useInterval(() => {
     if (frame + 1 > MAX_FRAME) {
@@ -17,13 +24,17 @@ function App() {
     setFrame(x => x + 1);
   }, 20);
 
+  if (width === null || height === null) {
+    return null;
+  }
+
   return (
     <div style={{ display: 'default' }}>
       {Array.from({ length: 1 }).map((_, i) => (
         <Instance
           key={i}
-          width={500}
-          height={500}
+          width={width}
+          height={height}
           frame={frame}
           maxFrame={MAX_FRAME}
           overlay
