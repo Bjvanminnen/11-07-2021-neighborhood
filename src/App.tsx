@@ -3,6 +3,8 @@ import useInterval from './useInterval';
 import Instance from './Instance';
 import { loadPalette, coolorPalette } from './palettes';
 
+// TODO: configure whether we use fxhash during local dev or get
+// consistent "hash"
 const seed = (window as any).fxhash;
 // console.log('seed:', seed);
 
