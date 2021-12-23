@@ -3,6 +3,7 @@ import React, { useRef, useEffect } from 'react';
 const Canvas = ({
   width,
   height,
+  id,
   frame = 0,
   style,
   onDraw,
@@ -10,6 +11,7 @@ const Canvas = ({
 }: {
   width: number;
   height: number;
+  id?: string;
   frame?: number;
   style?: object;
   onDraw: (ctx: CanvasRenderingContext2D) => void;
@@ -29,6 +31,7 @@ const Canvas = ({
   return (
     <canvas
       ref={ref}
+      id={id}
       width={width}
       height={height}
       style={style}

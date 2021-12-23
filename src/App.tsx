@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import useInterval from './useInterval';
 import Instance from './Instance';
 
-const seed = '1640072864886' || Date.now().toString();
+const seed = (window as any).fxhash;
 console.log('seed:', seed);
 
 function App() {

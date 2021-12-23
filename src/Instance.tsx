@@ -35,7 +35,7 @@ function Instance({
   overlay?: boolean;
 }) {
   const [world] = useState(() => new World(width, height, options));
-  const [giffer] = useState(() => new Giffer(true));
+  const [giffer] = useState(() => new Giffer(false));
 
   useEffect(() => {
     world.update();
@@ -109,6 +109,7 @@ function Instance({
       {drawers.map((drawer, i) => (
         <Canvas
           key={i}
+          id='test'
           style={{
             background: i === 0 ? world.background : 'transparent',
             // border: '1px solid black',
@@ -122,10 +123,10 @@ function Instance({
           frame={frame}
         />
       ))}
-      <div style={{ position: 'absolute', left: width + 10 }}>
+      {/*<div style={{ position: 'absolute', left: width + 10 }}>
         <button onClick={handleSave}>Save {~~(frame / 100) * 100}</button>
         <div>{options.seed}</div>
-      </div>
+      </div>*/}
     </div>
   );
 }
