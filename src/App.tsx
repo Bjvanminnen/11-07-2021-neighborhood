@@ -23,7 +23,8 @@ if (DISABLE_FX) {
 console.log('seed:', seed);
 
 const features = generateFeatures(window.fxrand);
-console.log(features);
+// console.log(features);
+
 window.$fxhashFeatures = features;
 
 function App() {

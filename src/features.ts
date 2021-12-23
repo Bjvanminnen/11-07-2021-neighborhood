@@ -7,10 +7,9 @@ function pickOption(options: any[], freqs: number[], val: number) {
     (sums: number[], cur) => sums.concat((sums[sums.length - 1] ?? 0) + cur),
     [],
   );
-  if (Math.abs(freqSums[freqSums.length] - 1) > 0.0000001) {
+  if (Math.abs(freqSums[freqSums.length - 1] - 1) > 0.0000001) {
     throw new Error('freqs dont add up');
   }
-
   for (let i = 0; i < freqSums.length; i++) {
     if (val <= freqSums[i]) {
       return options[i];
@@ -20,10 +19,9 @@ function pickOption(options: any[], freqs: number[], val: number) {
 
 export default function generateFeatures(rng: () => number) {
   const features = {
-    // TODO: might rename to something like theme?
     theme: pickOption(
       ['retro', 'earthworm', 'mint'],
-      [0.33, 0.33, 0.33],
+      [0.34, 0.33, 0.33],
       rng(),
     ),
     density: pickOption(
