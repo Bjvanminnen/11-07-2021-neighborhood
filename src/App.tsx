@@ -82,7 +82,7 @@ function App() {
           height={height}
           frame={frame}
           maxFrame={MAX_FRAME}
-          fadeFrame={60}
+          fadeFrame={0}
           overlay={true}
           options={{
             seed: seed + (i === 0 ? '' : i),

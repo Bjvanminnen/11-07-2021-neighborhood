@@ -55,8 +55,11 @@ export default class World {
     this.background = background;
 
     this.agents = [];
-    this.initializeAgentsGrid(width, height, foreground);
-    // this.initializeAgentsQuadrants(width, height, foreground);
+    if (options.features?.density === 'clustered') {
+      this.initializeAgentsQuadrants(width, height, foreground);
+    } else {
+      this.initializeAgentsGrid(width, height, foreground);
+    }
   }
 
   private initializeAgentsGrid(
@@ -106,7 +109,6 @@ export default class World {
         });
       }
     }
-    console.log(this.agents.length);
   }
 
   private initializeAgentsQuadrants(
@@ -121,12 +123,12 @@ export default class World {
       p[1] + randRange(-amt, amt),
     ];
 
-    const BUFF = 100;
+    const BUFF = 75;
     const quadrants: Point[] = [
-      [width / 2 - BUFF, height / 2],
-      [width / 2 + BUFF, height / 2],
-      // [width * 0.35, height * 0.5],
-      // [width * 0.65, height * 0.5],
+      jitter([width / 2 - BUFF, height / 2 + BUFF], 40),
+      jitter([width / 2 + BUFF, height / 2 + BUFF], 40),
+      jitter([width / 2 - BUFF, height / 2 - BUFF], 40),
+      jitter([width / 2 + BUFF, height / 2 - BUFF], 40),
       // [(width * 2) / 4, height * 0.6],
     ];
 
@@ -134,7 +136,7 @@ export default class World {
     this.agents = [];
 
     quadrants.forEach(quad => {
-      const jitterAmt = 20;
+      const jitterAmt = 50;
       this.agents.push({
         point: jitter(quad, jitterAmt),
         vector: [randRange(-mag, mag), randRange(-mag, mag)],
