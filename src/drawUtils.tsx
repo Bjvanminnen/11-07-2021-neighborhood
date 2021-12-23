@@ -72,18 +72,9 @@ export const drawYarn = (
   pv: Pick<Agent, 'point' | 'color'>,
   background: string,
 ) => {
-  {
-    const offset = 1;
-    const point: Point = [pv.point[0] - offset, pv.point[1] - offset];
-    // ctx.strokeStyle = (pv.color ?? '#000000') + '66';
-    ctx.strokeStyle = 'darkgray';
-    // drawPoint(ctx, point, 1);
-  }
-
-  ctx.fillStyle = (pv.color ?? '#000000') + 'ff';
-
-  const radius = 2;
+  const radius = 0.5;
   const point: Point = [pv.point[0], pv.point[1]];
+  // TODO: less alpha based on speed?
   ctx.strokeStyle = background + '66';
   drawPoint(ctx, point, radius * 1.5);
   ctx.strokeStyle = (pv.color ?? '#000000') + 'ff';

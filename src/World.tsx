@@ -66,8 +66,8 @@ export default class World {
     const centerX = width / 2;
     const centerY = height / 2;
     // const BUFF = Math.min(width, height) * 0.08;
-    const BUFF = 300;
-    const gap = 80;
+    const BUFF = 200;
+    const gap = 50;
     const mag = 1;
 
     const jitter = (p: Point, amt = 1): Point => [

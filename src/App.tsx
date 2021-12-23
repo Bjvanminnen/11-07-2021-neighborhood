@@ -25,6 +25,12 @@ function pickSeason(val: number): season {
   return 'spring';
 }
 
+// possible features:
+// - colors
+// - initial density
+// - speed?
+// - dot size?
+
 const $fxhashFeatures = {
   season: pickSeason((window as any)?.fxrand() ?? 0),
 };
@@ -86,7 +92,8 @@ function App() {
           height={height}
           frame={frame}
           maxFrame={MAX_FRAME}
-          overlay={false}
+          fadeFrame={60}
+          overlay={true}
           options={{
             seed: seed + (i === 0 ? '' : i),
             vectorLerp: 1,

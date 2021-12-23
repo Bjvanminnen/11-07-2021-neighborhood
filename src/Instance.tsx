@@ -25,6 +25,7 @@ function Instance({
   options,
   flipped,
   overlay,
+  fadeFrame,
 }: {
   width: number;
   height: number;
@@ -33,6 +34,7 @@ function Instance({
   options: WorldOptions;
   flipped?: boolean;
   overlay?: boolean;
+  fadeFrame?: number;
 }) {
   const [world] = useState(() => new World(width, height, options));
   const [giffer] = useState(() => new Giffer(false));
@@ -42,12 +44,11 @@ function Instance({
   }, [world, frame]);
 
   const onDraw = (ctx: CanvasRenderingContext2D) => {
-    const fade = true;
-    if (fade && frame % 20 === 0) {
+    if (fadeFrame && frame % fadeFrame === 0) {
       ctx.fillStyle = world.background + '02';
       ctx.fillRect(0, 0, width, height);
     }
-    world.draw(ctx, '02');
+    world.draw(ctx, '01');
   };
 
   const onDrawOverlay = (ctx: CanvasRenderingContext2D) => {
