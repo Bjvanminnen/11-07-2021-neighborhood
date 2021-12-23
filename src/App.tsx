@@ -2,39 +2,28 @@ import React, { useEffect, useState } from 'react';
 import useInterval from './useInterval';
 import Instance from './Instance';
 import { loadPalette, coolorPalette } from './palettes';
+import generateFeatures from './features';
+
+declare global {
+  interface Window {
+    fxrand: () => number;
+    fxhash: string;
+    $fxhashFeatures: ReturnType<typeof generateFeatures>;
+  }
+}
 
 const DISABLE_FX = true;
-let seed = (window as any).fxhash;
+let seed = window.fxhash;
 
 if (DISABLE_FX) {
   seed = '1234' ?? new Date().toString();
-  (window as any).fxrand = Math.random;
+  window.fxrand = Math.random;
 }
 
 console.log('seed:', seed);
 
-type season = 'winter' | 'autumn' | 'spring';
-function pickSeason(val: number): season {
-  if (val < 0.7) {
-    return 'winter';
-  }
-
-  if (val < 0.9) {
-    return 'autumn';
-  }
-  return 'spring';
-}
-
-// possible features:
-// - colors
-// - initial density
-// - speed?
-// - dot size?
-
-const $fxhashFeatures = {
-  season: pickSeason((window as any)?.fxrand() ?? 0),
-};
-(window as any).$fxhashFeatures = $fxhashFeatures;
+const $fxhashFeatures = generateFeatures((window as any)?.fxrand() ?? 0);
+window.$fxhashFeatures = $fxhashFeatures;
 
 function App() {
   const MAX_FRAME = Infinity;
