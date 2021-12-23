@@ -28,6 +28,7 @@ export interface WorldOptions {
   palette?: string[];
   vectorLerp?: number;
   optionB?: boolean;
+  features?: any;
 }
 
 export default class World {
@@ -46,6 +47,7 @@ export default class World {
       palette: coolorPalette('333745-e63462-fe5f55-c7efcf-eef5db'),
       vectorLerp: 1,
       optionB: false,
+      features: {},
       ...options,
     };
 
@@ -62,13 +64,30 @@ export default class World {
     height: number,
     palette: string[],
   ) {
+    const magByFeature: { [k: string]: number } = {
+      standard: 1,
+      fast: 3,
+      slow: 0.3,
+    };
+    const bufByFeature: { [k: string]: number } = {
+      standard: 200,
+      dense: 80,
+    };
+    const gapByFeature: { [k: string]: number } = {
+      standard: 50,
+      dense: 20,
+    };
+
     const { randRange, sample } = this;
     const centerX = width / 2;
     const centerY = height / 2;
     // const BUFF = Math.min(width, height) * 0.08;
-    const BUFF = 200;
-    const gap = 50;
-    const mag = 1;
+    const BUFF =
+      bufByFeature[this.options.features?.density] ?? bufByFeature.standard;
+    const gap =
+      gapByFeature[this.options.features?.density] ?? gapByFeature.standard;
+    const mag =
+      magByFeature[this.options.features?.speed] ?? magByFeature.standard;
 
     const jitter = (p: Point, amt = 1): Point => [
       p[0] + randRange(-amt, amt),
@@ -87,6 +106,7 @@ export default class World {
         });
       }
     }
+    console.log(this.agents.length);
   }
 
   private initializeAgentsQuadrants(
@@ -320,12 +340,13 @@ export default class World {
   draw(ctx: CanvasRenderingContext2D, alpha?: string) {
     const { agents } = this;
 
-    // if (alpha) {
-    //   ctx.globalCompositeOperation = 'luminosity';
-    //   const { width, height } = ctx.canvas;
-    //   ctx.fillStyle = this.background + alpha;
-    //   ctx.fillRect(0, 0, width, height);
-    // }
+    let radius = 1;
+    const { dot } = this.options.features;
+    if (dot === 'big') {
+      radius = 4;
+    } else if (dot === 'small') {
+      radius = 0.25;
+    }
 
     // ctx.globalCompositeOperation = 'source-over';
     // ctx.strokeStyle = 'gray';
@@ -333,7 +354,7 @@ export default class World {
       // draw.drawPoint(ctx, agent.point, 1, agent.color + '80'),
       ctx.strokeStyle = agent.color!;
       // draw.drawDoublePoint(ctx, agent, 3);
-      draw.drawYarn(ctx, agent, this.background);
+      draw.drawYarn(ctx, agent, this.background, radius);
     });
   }
 

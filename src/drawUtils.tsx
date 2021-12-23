@@ -71,11 +71,11 @@ export const drawYarn = (
   ctx: CanvasRenderingContext2D,
   pv: Pick<Agent, 'point' | 'color'>,
   background: string,
+  radius: number,
 ) => {
-  const radius = 0.5;
   const point: Point = [pv.point[0], pv.point[1]];
   // TODO: less alpha based on speed?
-  ctx.strokeStyle = background + '66';
+  ctx.strokeStyle = background + '88';
   drawPoint(ctx, point, radius * 1.5);
   ctx.strokeStyle = (pv.color ?? '#000000') + 'ff';
   drawPoint(ctx, point, radius);

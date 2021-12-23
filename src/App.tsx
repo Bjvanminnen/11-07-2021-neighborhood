@@ -12,7 +12,7 @@ declare global {
   }
 }
 
-const DISABLE_FX = true;
+const DISABLE_FX = false;
 let seed = window.fxhash;
 
 if (DISABLE_FX) {
@@ -89,6 +89,7 @@ function App() {
             vectorLerp: 1,
             optionB: false,
             palette,
+            features,
           }}
         />
       ))}
