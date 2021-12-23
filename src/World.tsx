@@ -11,7 +11,7 @@ import {
   vectorRadians,
 } from './utils';
 import { drawAgent, drawPoint, drawTriangle, drawCircle } from './drawUtils';
-import { loadPalette, coolorPalette } from './palettes';
+import { coolorPalette } from './palettes';
 
 const TAU = 2 * Math.PI;
 
@@ -25,7 +25,7 @@ export interface Agent {
 
 export interface WorldOptions {
   seed: string;
-  paletteIndex?: number;
+  palette?: string[];
   vectorLerp?: number;
   optionB?: boolean;
 }
@@ -43,27 +43,18 @@ export default class World {
     this.rng = seedrandom(options.seed);
 
     this.options = {
-      paletteIndex: ~~randRange(0, 1000),
+      palette: coolorPalette('333745-e63462-fe5f55-c7efcf-eef5db'),
       vectorLerp: 1,
       optionB: false,
       ...options,
     };
 
-    const { paletteIndex } = this.options;
-    if (!options.paletteIndex) {
-      console.log('palette: ', paletteIndex);
-    }
-
-    // let palette = loadPalette(paletteIndex);
-    // console.log(JSON.stringify(palette));
-    const palette = coolorPalette('333745-e63462-fe5f55-c7efcf-eef5db');
-
-    this.background = palette[0];
-    palette.shift();
+    const [background, ...foreground] = this.options.palette;
+    this.background = background;
 
     this.agents = [];
     // this.initializeAgentsGrid(width, height, palette);
-    this.initializeAgentsQuadrants(width, height, palette);
+    this.initializeAgentsQuadrants(width, height, foreground);
   }
 
   private initializeAgentsGrid(

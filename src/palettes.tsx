@@ -1,4 +1,5 @@
 const palettes = require('nice-color-palettes/1000');
+// const palettes: string[][] = [];
 const custPalette = [
   '#613F75',
   '#c1ff9b',
