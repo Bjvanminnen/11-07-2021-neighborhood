@@ -42,11 +42,11 @@ function Instance({
   }, [world, frame]);
 
   const onDraw = (ctx: CanvasRenderingContext2D) => {
-    // if (frame === 0) {
-    //   ctx.fillStyle = world.background ?? 'black';
-    //   ctx.fillRect(0, 0, width, height);
-    // }
-
+    const fade = true;
+    if (fade && frame % 20 === 0) {
+      ctx.fillStyle = world.background + '02';
+      ctx.fillRect(0, 0, width, height);
+    }
     world.draw(ctx, '02');
   };
 
@@ -115,7 +115,7 @@ function Instance({
             // border: '1px solid black',
             // position: 'absolute',
             // left: 0,
-            display: i < 2 ? 'none' : 'default',
+            display: overlay && i < 2 ? 'none' : 'default',
             width: '100%',
             height: '100%',
           }}

@@ -35,10 +35,10 @@ export const drawPoint = (
   if (color) {
     ctx.strokeStyle = color;
   }
-  ctx.strokeRect(point[0], point[1], 1, 1);
-  // ctx.beginPath();
-  // ctx.arc(point[0], point[1], radius, 0, 2 * Math.PI);
-  // ctx.stroke();
+  // ctx.strokeRect(point[0], point[1], 1, 1);
+  ctx.beginPath();
+  ctx.arc(point[0], point[1], radius, 0, 2 * Math.PI);
+  ctx.stroke();
 };
 
 export const drawDoublePoint = (
@@ -67,23 +67,27 @@ export const drawDoublePoint = (
   );
 };
 
-export const drawAgent = (
+export const drawYarn = (
   ctx: CanvasRenderingContext2D,
-  pv: Agent,
+  pv: Pick<Agent, 'point' | 'color'>,
   background: string,
 ) => {
-  ctx.fillStyle = 'black';
-  // drawDoublePoint(pv, 3);
-  ctx.fillStyle = (pv.color ?? '#000000') + 'ff';
-  ctx.strokeStyle = (pv.color ?? '#000000') + '66';
-  // drawDoublePoint(pv, 2.5);
+  {
+    const offset = 1;
+    const point: Point = [pv.point[0] - offset, pv.point[1] - offset];
+    // ctx.strokeStyle = (pv.color ?? '#000000') + '66';
+    ctx.strokeStyle = 'darkgray';
+    // drawPoint(ctx, point, 1);
+  }
 
-  // ctx.fillStyle = '#00000044';
+  ctx.fillStyle = (pv.color ?? '#000000') + 'ff';
+
+  const radius = 2;
   const point: Point = [pv.point[0], pv.point[1]];
-  ctx.strokeStyle = background;
-  drawPoint(ctx, point, 4.5);
+  ctx.strokeStyle = background + '66';
+  drawPoint(ctx, point, radius * 1.5);
   ctx.strokeStyle = (pv.color ?? '#000000') + 'ff';
-  drawPoint(ctx, point, 3);
+  drawPoint(ctx, point, radius);
 };
 
 export const drawCircle = (
@@ -118,3 +122,20 @@ export const strokeCircle = (
   ctx.arc(center[0], center[1], radius, 0, 2 * Math.PI);
   ctx.stroke();
 };
+
+export function drawSquare(
+  ctx: CanvasRenderingContext2D,
+  center: Point,
+  outer: Point,
+) {
+  const dx = outer[0] - center[0];
+  const dy = outer[1] - center[1];
+  const magnitude = Math.abs(dx) + Math.abs(dy);
+  ctx.beginPath();
+  ctx.moveTo(center[0] + 0, center[1] + magnitude);
+  ctx.lineTo(center[0] + magnitude, center[1] + 0);
+  ctx.lineTo(center[0] + 0, center[1] + -magnitude);
+  ctx.lineTo(center[0] + -magnitude, center[1] + 0);
+  ctx.lineTo(center[0] + 0, center[1] + magnitude);
+  ctx.stroke();
+}

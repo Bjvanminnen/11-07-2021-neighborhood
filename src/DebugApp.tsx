@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Canvas from './Canvas';
-import { strokeCircle, drawCircle, fillCircle } from './drawUtils';
+import { strokeCircle, drawCircle, drawSquare, fillCircle } from './drawUtils';
 import { Point, vectorRadians } from './utils';
 import World, { Agent } from './World';
 
@@ -25,23 +25,6 @@ function drawVector(
     [point[0] - vector[0] * magnitude, point[1] - vector[1] * magnitude],
     point,
   );
-}
-
-function drawSquare(
-  ctx: CanvasRenderingContext2D,
-  center: Point,
-  outer: Point,
-) {
-  const dx = outer[0] - center[0];
-  const dy = outer[1] - center[1];
-  const magnitude = Math.abs(dx) + Math.abs(dy);
-  ctx.beginPath();
-  ctx.moveTo(center[0] + 0, center[1] + magnitude);
-  ctx.lineTo(center[0] + magnitude, center[1] + 0);
-  ctx.lineTo(center[0] + 0, center[1] + -magnitude);
-  ctx.lineTo(center[0] + -magnitude, center[1] + 0);
-  ctx.lineTo(center[0] + 0, center[1] + magnitude);
-  ctx.stroke();
 }
 
 function App() {

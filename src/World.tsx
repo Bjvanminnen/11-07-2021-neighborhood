@@ -10,7 +10,7 @@ import {
   shuffle,
   vectorRadians,
 } from './utils';
-import { drawAgent, drawPoint, drawTriangle, drawCircle } from './drawUtils';
+import * as draw from './drawUtils';
 import { coolorPalette } from './palettes';
 
 const TAU = 2 * Math.PI;
@@ -53,8 +53,8 @@ export default class World {
     this.background = background;
 
     this.agents = [];
-    // this.initializeAgentsGrid(width, height, palette);
-    this.initializeAgentsQuadrants(width, height, foreground);
+    this.initializeAgentsGrid(width, height, foreground);
+    // this.initializeAgentsQuadrants(width, height, foreground);
   }
 
   private initializeAgentsGrid(
@@ -65,8 +65,9 @@ export default class World {
     const { randRange, sample } = this;
     const centerX = width / 2;
     const centerY = height / 2;
-    const BUFF = Math.min(width, height) * 0.08;
-    const gap = 40;
+    // const BUFF = Math.min(width, height) * 0.08;
+    const BUFF = 300;
+    const gap = 80;
     const mag = 1;
 
     const jitter = (p: Point, amt = 1): Point => [
@@ -326,9 +327,14 @@ export default class World {
     //   ctx.fillRect(0, 0, width, height);
     // }
 
-    ctx.globalCompositeOperation = 'source-over';
-    ctx.strokeStyle = 'gray';
-    agents.forEach(agent => drawPoint(ctx, agent.point, 1, agent.color + '80'));
+    // ctx.globalCompositeOperation = 'source-over';
+    // ctx.strokeStyle = 'gray';
+    agents.forEach(agent => {
+      // draw.drawPoint(ctx, agent.point, 1, agent.color + '80'),
+      ctx.strokeStyle = agent.color!;
+      // draw.drawDoublePoint(ctx, agent, 3);
+      draw.drawYarn(ctx, agent, this.background);
+    });
   }
 
   drawOverlay(ctx: CanvasRenderingContext2D) {
@@ -338,8 +344,12 @@ export default class World {
     // ctx.clearRect(0, 0, width, height);
     for (let i = 0; i < shuffled.length; i++) {
       const neighbor = this.findNearest(shuffled, shuffled[i]);
-      ctx.strokeStyle = neighbor.color + '05';
-      drawCircle(ctx, shuffled[i].point, neighbor.point);
+      ctx.strokeStyle = neighbor.color + '02';
+      if (this.options.optionB) {
+        draw.drawCircle(ctx, shuffled[i].point, neighbor.point);
+      } else {
+        draw.drawSquare(ctx, shuffled[i].point, neighbor.point);
+      }
     }
   }
 }

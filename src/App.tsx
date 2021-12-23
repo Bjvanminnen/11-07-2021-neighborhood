@@ -3,10 +3,15 @@ import useInterval from './useInterval';
 import Instance from './Instance';
 import { loadPalette, coolorPalette } from './palettes';
 
-// TODO: configure whether we use fxhash during local dev or get
-// consistent "hash"
-const seed = (window as any).fxhash;
-// console.log('seed:', seed);
+const DISABLE_FX = true;
+let seed = (window as any).fxhash;
+
+if (DISABLE_FX) {
+  seed = '1234' ?? new Date().toString();
+  (window as any).fxrand = Math.random;
+}
+
+console.log('seed:', seed);
 
 type season = 'winter' | 'autumn' | 'spring';
 function pickSeason(val: number): season {
@@ -38,7 +43,8 @@ function App() {
   const [width, setWidth] = useState<number | null>(null);
   const [height, setHeight] = useState<number | null>(null);
   const [palette, setPalette] = useState<string[] | null>(
-    palettes[$fxhashFeatures.season],
+    // palettes[$fxhashFeatures.season],
+    ['#eeeeee', ...loadPalette(6), ...loadPalette(7)],
   );
 
   useEffect(() => {
@@ -80,11 +86,11 @@ function App() {
           height={height}
           frame={frame}
           maxFrame={MAX_FRAME}
-          overlay
+          overlay={false}
           options={{
             seed: seed + (i === 0 ? '' : i),
             vectorLerp: 1,
-            optionB: true,
+            optionB: false,
             palette,
           }}
         />
