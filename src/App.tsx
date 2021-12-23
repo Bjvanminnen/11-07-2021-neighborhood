@@ -22,8 +22,9 @@ if (DISABLE_FX) {
 
 console.log('seed:', seed);
 
-const $fxhashFeatures = generateFeatures((window as any)?.fxrand() ?? 0);
-window.$fxhashFeatures = $fxhashFeatures;
+const features = generateFeatures(window.fxrand);
+console.log(features);
+window.$fxhashFeatures = features;
 
 function App() {
   const MAX_FRAME = Infinity;
