@@ -110,7 +110,6 @@ function Instance({
       {drawers.map((drawer, i) => (
         <Canvas
           key={i}
-          id='test'
           style={{
             background: i === 0 ? world.background : 'transparent',
             // border: '1px solid black',

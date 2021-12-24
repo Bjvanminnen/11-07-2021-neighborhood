@@ -3,6 +3,7 @@ import useInterval from './useInterval';
 import Instance from './Instance';
 import { loadPalette, coolorPalette, toCoolor } from './palettes';
 import generateFeatures from './features';
+import useDimensions from './core/useDimensions';
 
 declare global {
   interface Window {
@@ -44,19 +45,14 @@ function App() {
   };
 
   const [frame, setFrame] = useState(0);
-  const [width, setWidth] = useState<number | null>(null);
-  const [height, setHeight] = useState<number | null>(null);
   const [startTime] = useState(new Date());
 
   // initialPalette = palettes.browns;
-  const [palette, setPalette] = useState<string[] | null>(
-    palettes[features.theme],
-  );
+  const [palette] = useState<string[] | null>(palettes[features.theme]);
+
+  const { width, height } = useDimensions();
 
   useEffect(() => {
-    setWidth(window.innerWidth);
-    setHeight(window.innerHeight);
-
     // if (!palette) {
     //   const i1 = ~~(window.fxrand() * 1000);
     //   const i2 = ~~(window.fxrand() * 1000);
@@ -84,7 +80,7 @@ function App() {
     setFrame(x => x + 1);
   }, 20);
 
-  if (width === null || height === null || !palette) {
+  if (!width || !height || !palette) {
     return null;
   }
 
