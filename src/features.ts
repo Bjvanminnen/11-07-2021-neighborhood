@@ -20,8 +20,8 @@ function pickOption(options: any[], freqs: number[], val: number) {
 export default function generateFeatures(rng: () => number) {
   const features = {
     theme: pickOption(
-      ['retro', 'earthworm', 'mint'],
-      [0.34, 0.33, 0.33],
+      ['synthwave', 'earthworm', 'toothpaste'],
+      [0.45, 0.25, 0.3],
       rng(),
     ),
     density: pickOption(
@@ -30,7 +30,7 @@ export default function generateFeatures(rng: () => number) {
       rng(),
     ),
     speed: pickOption(['standard', 'fast', 'slow'], [0.65, 0.3, 0.05], rng()),
-    dot: pickOption(['standard', 'small', 'big'], [0.5, 0.2, 0.3], rng()),
+    dot: pickOption(['standard', 'big'], [0.6, 0.4], rng()),
   };
 
   if (features.speed === 'fast' && features.dot === 'small') {

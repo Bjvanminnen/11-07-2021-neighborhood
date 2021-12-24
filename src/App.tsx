@@ -34,18 +34,19 @@ function App() {
     // browns: coolorPalette(
     //   '281a1a-6c3e37-70454e-ae736f-dda8b0-807070-9a8fc8-8dbdeb-a5e6c8-d9f5b5',
     // ),
-    retro: coolorPalette(
+    synthwave: coolorPalette(
       '1f1e1f-e84b2c-e6d839-7cd164-2eb8ac-fa3419-ffc43d-7cbc9a-23998e-1d5e69',
     ),
     earthworm: coolorPalette(
       '745e50-ff948b-fdaf8a-fcd487-f79585-27191c-2d3839-114d4d-6e9987-e0e4ce',
     ),
-    mint: coolorPalette('eaf2ef-b97375-2d2d34-4a7856-498c8a'),
+    toothpaste: coolorPalette('eaf2ef-b97375-2d2d34-4a7856-498c8a'),
   };
 
   const [frame, setFrame] = useState(0);
   const [width, setWidth] = useState<number | null>(null);
   const [height, setHeight] = useState<number | null>(null);
+  const [startTime] = useState(new Date());
 
   // initialPalette = palettes.browns;
   const [palette, setPalette] = useState<string[] | null>(
@@ -72,6 +73,11 @@ function App() {
   }, [palette]);
 
   useInterval(() => {
+    // const d = new Date();
+    // const PREVIEW_TIME = 1000 * 25;
+    // if (d.getTime() - startTime.getTime() > PREVIEW_TIME) {
+    //   return;
+    // }
     if (frame + 1 > MAX_FRAME) {
       return;
     }
