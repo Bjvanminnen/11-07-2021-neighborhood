@@ -16,6 +16,8 @@ declare global {
 const DISABLE_FX = false;
 let seed = window.fxhash;
 
+const PREVIEW_TIME = 0; //1000 * 25;
+
 if (DISABLE_FX) {
   seed = '1234' ?? new Date().toString();
   window.fxrand = Math.random;
@@ -32,9 +34,6 @@ function App() {
   const MAX_FRAME = Infinity;
 
   const palettes: { [k: string]: string[] } = {
-    // browns: coolorPalette(
-    //   '281a1a-6c3e37-70454e-ae736f-dda8b0-807070-9a8fc8-8dbdeb-a5e6c8-d9f5b5',
-    // ),
     synthwave: coolorPalette(
       '1f1e1f-e84b2c-e6d839-7cd164-2eb8ac-fa3419-ffc43d-7cbc9a-23998e-1d5e69',
     ),
@@ -42,38 +41,39 @@ function App() {
       '745e50-ff948b-fdaf8a-fcd487-f79585-27191c-2d3839-114d4d-6e9987-e0e4ce',
     ),
     toothpaste: coolorPalette('eaf2ef-b97375-2d2d34-4a7856-498c8a'),
+    compostable: coolorPalette('241811-d4a979-e3c88f-c2c995-a8bd95'),
   };
 
   const [frame, setFrame] = useState(0);
   const [startTime] = useState(new Date());
 
-  // initialPalette = palettes.browns;
   const [palette] = useState<string[] | null>(palettes[features.theme]);
+  // const [palette, setPalette] = useState<string[] | null>(null);
 
   const { width, height } = useDimensions();
 
-  useEffect(() => {
-    // if (!palette) {
-    //   const i1 = ~~(window.fxrand() * 1000);
-    //   const i2 = ~~(window.fxrand() * 1000);
-    //
-    //   let result = [...loadPalette(i1), ...loadPalette(i2)];
-    //   // result = coolorPalette(
-    //   //   'e3e8cd-bcd8bf-d3b9a3-ee9c92-fe857e-f0d8a8-3d1c00-86b8b1-f2d694-fa2a00',
-    //   // );
-    //   console.log(i1, i2, toCoolor(result));
-    //   setPalette(result);
-    // } else {
-    //   console.log(toCoolor(palette));
-    // }
-  }, [palette]);
+  // useEffect(() => {
+  //   if (!palette) {
+  //     const i1 = ~~(window.fxrand() * 1000);
+  //     const i2 = ~~(window.fxrand() * 1000);
+  //
+  //     let result = [...loadPalette(i1)];
+  //     // result = coolorPalette(
+  //     //   'e3e8cd-bcd8bf-d3b9a3-ee9c92-fe857e-f0d8a8-3d1c00-86b8b1-f2d694-fa2a00',
+  //     // );
+  //     console.log(i1, i2, toCoolor(result));
+  //     setPalette(coolorPalette('241811-d4a979-e3c88f-c2c995-a8bd95'));
+  //   } else {
+  //     console.log(toCoolor(palette));
+  //   }
+  // }, [palette]);
 
   useInterval(() => {
-    // const d = new Date();
-    // const PREVIEW_TIME = 1000 * 25;
-    // if (d.getTime() - startTime.getTime() > PREVIEW_TIME) {
-    //   return;
-    // }
+    const d = new Date();
+
+    if (PREVIEW_TIME && d.getTime() - startTime.getTime() > PREVIEW_TIME) {
+      return;
+    }
     if (frame + 1 > MAX_FRAME) {
       return;
     }

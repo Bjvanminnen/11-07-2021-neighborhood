@@ -351,7 +351,7 @@ export default class World {
     return nearest;
   }
 
-  draw(ctx: CanvasRenderingContext2D, alpha?: string) {
+  draw(ctx: CanvasRenderingContext2D) {
     const { agents } = this;
 
     let radius = 1;

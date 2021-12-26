@@ -47,8 +47,9 @@ function Instance({
     if (fadeFrame && frame % fadeFrame === 0) {
       ctx.fillStyle = world.background + '02';
       ctx.fillRect(0, 0, width, height);
+      console.log('fade');
     }
-    world.draw(ctx, '01');
+    world.draw(ctx);
   };
 
   const onDrawOverlay = (ctx: CanvasRenderingContext2D) => {

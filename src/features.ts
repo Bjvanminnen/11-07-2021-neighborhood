@@ -22,6 +22,7 @@ enum Theme {
   synthwave = 'synthwave',
   earthworm = 'earthworm',
   toothpaste = 'toothpaste',
+  compostable = 'compostable',
 }
 
 enum Density {
@@ -42,8 +43,8 @@ enum Dot {
 export default function generateFeatures(rng: () => number) {
   const features: { theme: Theme; density: Density; speed: Speed; dot: Dot } = {
     theme: pickOption(
-      [Theme.synthwave, Theme.earthworm, Theme.toothpaste],
-      [0.45, 0.25, 0.3],
+      [Theme.synthwave, Theme.earthworm, Theme.toothpaste, Theme.compostable],
+      [0.35, 0.15, 0.3, 0.2],
       rng(),
     ),
     density: pickOption(
@@ -63,6 +64,9 @@ export default function generateFeatures(rng: () => number) {
   if (features.theme === Theme.earthworm) {
     features.dot = rng() < 0.1 ? Dot.standard : Dot.big;
   }
-
+  // features.density = Density.dense;
+  // features.dot = Dot.big;
+  // features.speed = Speed.slow;
+  // console.log(features);
   return features;
 }
