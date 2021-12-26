@@ -1,4 +1,5 @@
 import seedrandom from 'seedrandom';
+import { Speed, Density } from './features';
 
 import {
   normalizedAngle,
@@ -68,17 +69,17 @@ export default class World {
     palette: string[],
   ) {
     const magByFeature: { [k: string]: number } = {
-      standard: 1,
-      fast: 3,
-      slow: 0.3,
+      [Speed.standard]: 1,
+      [Speed.fast]: 2.5,
+      [Speed.slow]: 0.3,
     };
     const bufByFeature: { [k: string]: number } = {
-      standard: 200,
-      dense: 80,
+      [Density.standard]: 200,
+      [Density.dense]: 80,
     };
     const gapByFeature: { [k: string]: number } = {
-      standard: 50,
-      dense: 20,
+      [Density.standard]: 50,
+      [Density.dense]: 20,
     };
 
     const { randRange, sample } = this;

@@ -25,17 +25,17 @@ enum Theme {
   compostable = 'compostable',
 }
 
-enum Density {
+export enum Density {
   standard = 'standard',
   clustered = 'clustered',
   dense = 'dense',
 }
-enum Speed {
+export enum Speed {
   standard = 'standard',
   fast = 'fast',
   slow = 'slow',
 }
-enum Dot {
+export enum Dot {
   standard = 'standard',
   big = 'big',
 }
