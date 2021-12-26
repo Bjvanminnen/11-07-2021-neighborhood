@@ -1,4 +1,4 @@
-function pickOption(options: any[], freqs: number[], val: number) {
+function pickOption<T>(options: T[], freqs: number[], val: number): T {
   if (options.length !== freqs.length) {
     throw new Error('options and freqs of different lengths');
   }
@@ -15,26 +15,53 @@ function pickOption(options: any[], freqs: number[], val: number) {
       return options[i];
     }
   }
+  return options[options.length - 1];
+}
+
+enum Theme {
+  synthwave = 'synthwave',
+  earthworm = 'earthworm',
+  toothpaste = 'toothpaste',
+}
+
+enum Density {
+  standard = 'standard',
+  clustered = 'clustered',
+  dense = 'dense',
+}
+enum Speed {
+  standard = 'standard',
+  fast = 'fast',
+  slow = 'slow',
+}
+enum Dot {
+  standard = 'standard',
+  big = 'big',
 }
 
 export default function generateFeatures(rng: () => number) {
-  const features = {
+  const features: { theme: Theme; density: Density; speed: Speed; dot: Dot } = {
     theme: pickOption(
-      ['synthwave', 'earthworm', 'toothpaste'],
+      [Theme.synthwave, Theme.earthworm, Theme.toothpaste],
       [0.45, 0.25, 0.3],
       rng(),
     ),
     density: pickOption(
-      ['standard', 'clustered', 'dense'],
+      [Density.standard, Density.clustered, Density.dense],
       [0.5, 0.4, 0.1],
       rng(),
     ),
-    speed: pickOption(['standard', 'fast', 'slow'], [0.65, 0.3, 0.05], rng()),
-    dot: pickOption(['standard', 'big'], [0.6, 0.4], rng()),
+    speed: pickOption(
+      [Speed.standard, Speed.fast, Speed.slow],
+      [0.65, 0.3, 0.05],
+      rng(),
+    ),
+    dot: pickOption([Dot.standard, Dot.big], [0.6, 0.4], rng()),
   };
 
-  if (features.speed === 'fast' && features.dot === 'small') {
-    features.dot = 'standard';
+  // Big dots for most earthworms
+  if (features.theme === Theme.earthworm) {
+    features.dot = rng() < 0.1 ? Dot.standard : Dot.big;
   }
 
   return features;
