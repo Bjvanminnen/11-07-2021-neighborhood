@@ -115,7 +115,7 @@ function Instance({
             // border: '1px solid black',
             // position: 'absolute',
             // left: 0,
-            display: overlay && i < 2 ? 'none' : 'default',
+            display: overlay && i < 2 ? 'none' : 'block',
             width: '100%',
             height: '100%',
           }}
