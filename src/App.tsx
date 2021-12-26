@@ -23,7 +23,7 @@ if (DISABLE_FX) {
   window.fxrand = Math.random;
 }
 
-console.log('seed:', seed);
+// console.log('seed:', seed);
 
 const features = generateFeatures(window.fxrand);
 // console.log(features);
