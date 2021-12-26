@@ -49,7 +49,7 @@ export default function generateFeatures(rng: () => number) {
     ),
     density: pickOption(
       [Density.standard, Density.clustered, Density.dense],
-      [0.5, 0.4, 0.1],
+      [0.5, 0.35, 0.15],
       rng(),
     ),
     speed: pickOption(
@@ -64,9 +64,5 @@ export default function generateFeatures(rng: () => number) {
   if (features.theme === Theme.earthworm) {
     features.dot = rng() < 0.1 ? Dot.standard : Dot.big;
   }
-  // features.density = Density.dense;
-  // features.dot = Dot.big;
-  // features.speed = Speed.slow;
-  // console.log(features);
   return features;
 }

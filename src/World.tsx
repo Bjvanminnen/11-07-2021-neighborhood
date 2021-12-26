@@ -74,12 +74,12 @@ export default class World {
       [Speed.slow]: 0.3,
     };
     const bufByFeature: { [k: string]: number } = {
-      [Density.standard]: 200,
-      [Density.dense]: 80,
+      [Density.standard]: 150,
+      [Density.dense]: 100,
     };
     const gapByFeature: { [k: string]: number } = {
       [Density.standard]: 50,
-      [Density.dense]: 20,
+      [Density.dense]: 30,
     };
 
     const { randRange, sample } = this;
