@@ -98,7 +98,7 @@ function App() {
           options={{
             seed: seed + (i === 0 ? '' : i),
             vectorLerp: 1,
-            optionB: false,
+            type: 'circle',
             palette,
             features,
           }}

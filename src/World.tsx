@@ -28,7 +28,7 @@ export interface WorldOptions {
   seed: string;
   palette?: string[];
   vectorLerp?: number;
-  optionB?: boolean;
+  type?: 'circle' | 'square';
   features?: any;
 }
 
@@ -47,7 +47,7 @@ export default class World {
     this.options = {
       palette: coolorPalette('333745-e63462-fe5f55-c7efcf-eef5db'),
       vectorLerp: 1,
-      optionB: false,
+      type: 'circle',
       features: {},
       ...options,
     };
@@ -213,7 +213,7 @@ export default class World {
   }
 
   private updateSingle(current: Agent, anchor: Point): Agent {
-    if (this.options.optionB) {
+    if (this.options.type === 'square') {
       return this.updateSingleSquare(current, anchor);
     }
     // the x and y of the line from point to anchor
@@ -381,7 +381,7 @@ export default class World {
     for (let i = 0; i < shuffled.length; i++) {
       const neighbor = this.findNearest(shuffled, shuffled[i]);
       ctx.strokeStyle = neighbor.color + '02';
-      if (this.options.optionB) {
+      if (this.options.type === 'square') {
         draw.drawCircle(ctx, shuffled[i].point, neighbor.point);
       } else {
         draw.drawSquare(ctx, shuffled[i].point, neighbor.point);
