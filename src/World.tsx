@@ -28,7 +28,7 @@ export interface WorldOptions {
   seed: string;
   palette?: string[];
   vectorLerp?: number;
-  type?: 'circle' | 'square';
+  type?: 'circle' | 'square' | 'double-square';
   features?: any;
 }
 
@@ -129,7 +129,7 @@ export default class World {
       jitter([width / 2 - BUFF, height / 2 + BUFF], 40),
       jitter([width / 2 + BUFF, height / 2 + BUFF], 40),
       jitter([width / 2 - BUFF, height / 2 - BUFF], 40),
-      jitter([width / 2 + BUFF, height / 2 - BUFF], 40),
+      // jitter([width / 2 + BUFF, height / 2 - BUFF], 40),
       // [(width * 2) / 4, height * 0.6],
     ];
 
@@ -213,9 +213,10 @@ export default class World {
   }
 
   private updateSingle(current: Agent, anchor: Point): Agent {
-    if (this.options.type === 'square') {
+    if (['square', 'double-square'].includes(this.options.type)) {
       return this.updateSingleSquare(current, anchor);
     }
+
     // the x and y of the line from point to anchor
     const dx = current.point[0] - anchor[0];
     const dy = current.point[1] - anchor[1];
@@ -383,7 +384,10 @@ export default class World {
       ctx.strokeStyle = neighbor.color + '02';
       if (this.options.type === 'square') {
         draw.drawCircle(ctx, shuffled[i].point, neighbor.point);
-      } else {
+      } else if (this.options.type === 'double-square') {
+        ctx.strokeStyle = shuffled[i].point + '04';
+        draw.drawSquare(ctx, neighbor.point, shuffled[i].point);
+      } else if (this.options.type === 'circle') {
         draw.drawSquare(ctx, shuffled[i].point, neighbor.point);
       }
     }

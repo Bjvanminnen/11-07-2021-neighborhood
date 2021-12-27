@@ -98,9 +98,12 @@ function App() {
           options={{
             seed: seed + (i === 0 ? '' : i),
             vectorLerp: 1,
-            type: 'circle',
+            type: 'double-square',
             palette,
-            features,
+            features: {
+              ...features,
+              density: 'clustered',
+            },
           }}
         />
       ))}
